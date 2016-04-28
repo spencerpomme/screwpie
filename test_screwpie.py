@@ -12,16 +12,16 @@ total_topic_data =  soup.find("span", {"class":"thispage"}).attrs["data-total-pa
 # finds rows of the table, exclude <tr> tags that not holding valid topic data
 # the "id" key is to exclude javascript at the beginning of the table rows
 rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
+for row in rows:
+    title = row.find("td", {"class": "title"}).a.attrs["title"]
+    title_url = row.find("td", {"class": "title"}).a.attrs["href"]
+    author = row.find("td", {"nowrap": "nowrap"}).a.text
+    author_url = row.find("td", {"nowrap": "nowrap"}).a.attrs["href"]
+    follow = row.find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
+    time = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
 
-title = rows[0].find("td", {"class": "title"}).a.attrs["title"]
-title_url = rows[0].find("td", {"class": "title"}).a.attrs["href"]
-author = rows[0].find("td", {"nowrap": "nowrap"}).a.text
-author_url = rows[0].find("td", {"nowrap": "nowrap"}).a.attrs["href"]
-follow = rows[0].find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
-time = rows[0].find("td", {"nowrap": "nowrap", "class": "time"}).text
 
-
-print(title, title_url)
-print(author, author_url)
-print(follow)
-print(time)
+    print(title, title_url)
+    print(author, author_url)
+    print(follow)
+    print(time)
