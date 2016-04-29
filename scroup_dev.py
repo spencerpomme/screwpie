@@ -94,7 +94,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV'):
     error_counter = 0
     perpage = 25
     failure_urls = []
-    file = open(r'C:\Users\spencer\Desktop\%s' % filename, 'w', newline='',
+    file = open(r'%s' % filename, 'w', newline='',
                 encoding='utf8')
     writer = csv.writer(file)
     if not pages:
@@ -119,32 +119,30 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV'):
             continue
     
         soup = bs4.BeautifulSoup(res.text, 'lxml')
+        table = soup.findAll("table", {"class": "olt"})
+        rows = list(table)[0].findAll("tr", {"class":"", "id":""})
+        if not len(rows):
+            print("Empty page or something wrong!")
+            continue
         print('Scraping page %d...' % (i+1))
-        titles = soup.select('tr[class] > td[class="title"] > a[class=""]')
-        authors = soup.select('tr[class] > td[nowrap="nowrap"] > a[class=""]')
-        follows = soup.select('tr[class] > td[class=""]')
-        lastres = soup.select('tr[class] > td[class="time"]')
-        urls = soup.select('tr[class] > td[class="title"] > a[class=""]')
-        print('[page info]titles: %d authors: %d follows: %d lastres: %d' %
-              (len(titles), len(authors), len(follows), len(lastres)))      
-        print('Saving page %d to desktop local file %s...' % (i+1, filename))
-        
-        for j in range(len(titles)):
+        for row in rows:
+            title = row.find("td", {"class": "title"}).a.attrs["title"]
+            title_url = row.find("td", {"class": "title"}).a.attrs["href"]
+            author = row.find("td", {"nowrap": "nowrap"}).a
+            author_url = row.find("td", {"nowrap": "nowrap"}).a.attrs["href"]
+            follow = row.find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
+            lastres = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
+                
             try:
-                writer.writerow([titles[j]['title'],
-                                 authors[j].getText(),
-                                 follows[j].getText(),
-                                 lastres[j].getText(),
-                                 urls[j]['href']])
-
+                writer.writerow([title, title_url, author.text, author_url, follow, lastres])
                 # detect if target appeared
-                result = hasAuthor('ToSaturday', authors[j])
+                result = hasAuthor('ToSaturday', author)
             except Exception as e:
-                print('Error occured on page %d line %d' % (i+1, j+1))
-                print(*[titles[j].getText(), authors[j].getText()])
+                print('Error occured on page %d' % (i+1))
+                print(*[title, author.text])
                 print('error message:', e)
-                if url not in failure_urls:
-                        failure_urls.append(url)
+                if title_url not in failure_urls:
+                        failure_urls.append(title_url)
                 error_counter += 1
         print('page wrote.')
     file.close()
@@ -164,8 +162,8 @@ def hasAuthor(person:str, tag:bs4.element.Tag)->bool: # just a printer for now
         title = tag.parent.parent.select('td > a[class=""]')[0]['title']
         follows = tag.parent.parent.select('td[class=""]')[0].text
         lastres = tag.parent.parent.select('td[class="time"]')[0].text
-        url = tag.parent.parent.select('td > a[class=""]')[0]['href']
-        print("[Found]%s %s %s %s %s" % (title, person, follows, lastres, url))
+        title_url = tag.parent.parent.select('td > a[class=""]')[0]['href']
+        print("[Found]%s %s %s %s %s" % (title, person, follows, lastres, title_url))
     else:
         return False
 
@@ -184,7 +182,7 @@ def searchDate(date:str, groups:list)->list:
 def getPages(url:str, headers:dict):
     """
     This function gets total page number of a group discussion.
-
+    works fine, but somehow redandent.
     """
     res = requests.get(url, headers=headers)
     psoup = bs4.BeautifulSoup(res.text, 'lxml')
@@ -224,6 +222,10 @@ if __name__ == '__main__':
                 'weixin': base + 'wexin/discussion?start=',
                 'spoil': base + 'spoil/discussion?start=',
                 'chen': base + 'chen19891018/discussion?start='}
+
+    fs = startOperation(url_dict["kplv"], 10, "test.csv")
+
+"""                
     start = time.clock()
     for value in url_dict.values():
         
@@ -244,3 +246,4 @@ if __name__ == '__main__':
     h , m = divmod(m, 60)
     print ("It takes %d hours %d minutes %.2f seconds." % (h, m, s))
     # The main problem right now is the speed.
+"""
