@@ -134,7 +134,8 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV'):
             lastres = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
                 
             try:
-                writer.writerow([title, title_url, author.text, author_url, follow, lastres])
+                writer.writerow([title, title_url, author.text,
+                                 author_url, follow, lastres])
                 # detect if target appeared
                 result = hasAuthor('ToSaturday', author)
             except Exception as e:
@@ -163,7 +164,7 @@ def hasAuthor(person:str, tag:bs4.element.Tag)->bool: # just a printer for now
         follows = tag.parent.parent.select('td[class=""]')[0].text
         lastres = tag.parent.parent.select('td[class="time"]')[0].text
         title_url = tag.parent.parent.select('td > a[class=""]')[0]['href']
-        print("[Found]%s %s %s %s %s" % (title, person, follows, lastres, title_url))
+        print("[Found]%s %s %s %s" % (title, person, lastres, title_url))
     else:
         return False
 
