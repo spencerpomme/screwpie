@@ -1,7 +1,7 @@
 ## Project Screwpie
 
 
-This project is a toy project of web crawler specifically targeted on douban groups since it has no officially provision of API. 
+This project is a toy project of web crawler specifically targeted on douban groups since it has no official provision of API. 
 
 
 
