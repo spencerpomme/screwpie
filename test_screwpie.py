@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 url = "https://www.douban.com/group/kaopulove/discussion?start=0"
 html = urlopen(url)
 soup = BeautifulSoup(html, "lxml")
-
+print(type(soup))
 # the main topic table
 table = soup.findAll("table", {"class": "olt"})
 # finds the total topics
