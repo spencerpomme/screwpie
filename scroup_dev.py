@@ -200,22 +200,7 @@ def insertData(row:list):
                                        row[1], row[2], row[3], row[4], row[5])
               )
 """
-
-
-if __name__ == '__main__':
-    # The following is for development test:
-
-    base = 'https://www.douban.com/group/'
-    url_dict = {'thzf': base + 'tianhezufang/discussion?start=',
-                'gzzf': base + 'gz020/discussion?start=',
-                'kplv': base + 'kaopulove/discussion?start=',
-                'weixin': base + 'wexin/discussion?start=',
-                'spoil': base + 'spoil/discussion?start=',
-                'chen': base + 'chen19891018/discussion?start='}
-
-    fs = startOperation(url_dict["kplv"], 10, "test.csv")
-
-"""                
+def mainProcess():
     start = time.clock()
     for value in url_dict.values():
         
@@ -235,5 +220,19 @@ if __name__ == '__main__':
     m , s = divmod(total_time, 60)
     h , m = divmod(m, 60)
     print ("It takes %d hours %d minutes %.2f seconds." % (h, m, s))
-    # The main problem right now is the speed.
-"""
+
+
+if __name__ == '__main__':
+    # The following is for development test:
+
+    base = 'https://www.douban.com/group/'
+    url_dict = {'thzf': base + 'tianhezufang/discussion?start=',
+                'gzzf': base + 'gz020/discussion?start=',
+                'kplv': base + 'kaopulove/discussion?start=',
+                'weixin': base + 'wexin/discussion?start=',
+                'spoil': base + 'spoil/discussion?start=',
+                'chen': base + 'chen19891018/discussion?start='}
+
+    fs = startOperation(url_dict["kplv"], 10, "test.csv")
+    # mainProcess()
+
