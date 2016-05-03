@@ -60,17 +60,17 @@ def initialization():
 
 def getGroupName(soup:bs4.BeautifulSoup)->str:
     '''
-    This function is a part of the scroup application, retriving
+    This function is a part of the screwpie application, retriving
     group name from the topic table page.
     '''
     groupname = soup.select('div > div > div[class="info"]\
                             > div[class="title"] > a')[0].getText()
     return groupname
 
-def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV'):
+def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
     '''
     type init_url: str
-    rtype: None
+    rtype: list
     '''
     # proxy config
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) "
