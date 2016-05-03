@@ -21,17 +21,6 @@ class NoPageNumber(Exception):
     def __str__(self):
         return 'Failed to get total group topic page numbers.'
     
-def showfunc(l1, l2, l3, l4):
-    '''
-    To print out the scraped topics
-    '''
-    length = len(l1)
-    for i in range(length):
-        print('%s %s %s %s' %
-              (l1[i].getText(),
-               l2[i].getText(),
-               l3[i].getText(),
-               l4[i].getText()))
 
 def initialization():
     '''
