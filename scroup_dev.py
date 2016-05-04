@@ -83,8 +83,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
     error_counter = 0
     perpage = 25
     failure_urls = []
-    file = open(r'%s' % filename, 'w', newline='',
-                encoding='utf8')
+    file = open(r'%s' % filename, 'w', newline='') # unicode...
     writer = csv.writer(file)
     if not pages:
         try:
@@ -140,6 +139,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
         print('\nTotal failed topic number: %d topics!' % error_counter)
     return failure_urls
 
+
 def hasAuthor(person:str, tag:bs4.element.Tag)->bool: # just a printer for now
     '''
     This function is an add-on function that check if the interested
@@ -169,6 +169,7 @@ def searchDate(date:str, groups:list)->list:
     '''
     raise NotImplementedError
 
+
 def getPages(url:str, headers:dict):
     """
     This function gets total page number of a group discussion.
@@ -183,7 +184,6 @@ def getPages(url:str, headers:dict):
         return int(paginator_list[1]['data-total-page'])
     else:
         raise NoPageNumber
-    
     
 
 """
@@ -200,6 +200,8 @@ def insertData(row:list):
                                        row[1], row[2], row[3], row[4], row[5])
               )
 """
+
+
 def mainProcess(pages=None):
     start = time.clock()
     for value in url_dict.values():
@@ -233,4 +235,4 @@ if __name__ == '__main__':
                 'chen': base + 'chen19891018/discussion?start='}
 
     # fs = startOperation(url_dict["kplv"], 10, "test.csv")
-    mainProcess(10)
+    mainProcess(2)
