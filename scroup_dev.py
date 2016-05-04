@@ -92,7 +92,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
             print(e)
             print("Set page number to default 5 pages.")
             pages = 5
-    print("Total pages to be scraped:", pages)
+    print("Total pages of group to be scraped:", pages)
     for i in range(pages):
         url = init_url + str(start_page + perpage * i)
         time.sleep(1)
@@ -106,12 +106,13 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
             continue
     
         soup = bs4.BeautifulSoup(res.text, 'lxml')
+        group_name = getGroupName(soup)
         table = soup.findAll("table", {"class": "olt"})
         rows = list(table)[0].findAll("tr", {"class":"", "id":""})
         if not len(rows):
             print("Empty page or something wrong!")
             continue
-        print('Scraping page %d...' % (i+1))
+        print('Scraping page %d/%d...' % (i+1, pages))
         for row in rows:
             title = row.find("td", {"class": "title"}).a.attrs["title"]
             title_url = row.find("td", {"class": "title"}).a.attrs["href"]
@@ -133,6 +134,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                         failure_urls.append(title_url)
                 error_counter += 1
         print('page wrote.')
+    print("Group %s collection done." % group_name)
     file.close()
     if error_counter:
         print('\nTotal failed topic number: %d topics!' % error_counter)
@@ -233,5 +235,5 @@ if __name__ == '__main__':
                 'spoil': base + 'spoil/discussion?start=',
                 'chen': base + 'chen19891018/discussion?start='}
 
-    # fs = startOperation(url_dict["kplv"], 10, "test.csv")
-    mainProcess(1)
+    fs = startOperation(url_dict["kplv"], 10, "test.csv")
+    # mainProcess(1)
