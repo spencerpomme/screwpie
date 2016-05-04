@@ -115,7 +115,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
         if not len(rows):
             print("Empty page or something wrong!")
             continue
-        print('Scraping page %d/%d...' % (i+1, pages))
+        print('Scraping page %d/%d...' % (i+1, pages), '\r', end="")
         for row in rows:
             title = row.find("td", {"class": "title"}).a.attrs["title"]
             title_url = row.find("td", {"class": "title"}).a.attrs["href"]
@@ -136,7 +136,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                 if title_url not in failure_urls:
                         failure_urls.append(title_url)
                 error_counter += 1
-        print('page wrote.')
+        print('page %d wrote.        ' % i, '\r')
     print("Group %s collected and saved to %s\%s" % (group_name, os.getcwd(), filename))
     file.close()
     if error_counter:
@@ -238,5 +238,5 @@ if __name__ == '__main__':
                 'spoil': base + 'spoil/discussion?start=',
                 'chen': base + 'chen19891018/discussion?start='}
 
-    fs = startOperation(url_dict["kplv"], 3, "test.csv")
+    fs = startOperation(url_dict["thzf"], pages=10, filename="test.csv")
     # mainProcess(1)
