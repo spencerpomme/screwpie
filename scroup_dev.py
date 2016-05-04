@@ -233,6 +233,5 @@ if __name__ == '__main__':
                 'spoil': base + 'spoil/discussion?start=',
                 'chen': base + 'chen19891018/discussion?start='}
 
-    fs = startOperation(url_dict["kplv"], 10, "test.csv")
-    # mainProcess()
-
+    # fs = startOperation(url_dict["kplv"], 10, "test.csv")
+    mainProcess()
