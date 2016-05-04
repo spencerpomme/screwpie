@@ -4,9 +4,12 @@
 # info of all group topics
 # TODO: reorganize this long code into classes.
 
-import requests, bs4, csv
+from bs4 import BeautifulSoup
+import requests
 import datetime
 import time
+import csv
+import os
 # import psycopg2
 
 class CSVfileNameError(Exception):
@@ -58,7 +61,7 @@ def initialization():
             break
     return (url, pagenum, filename)
 
-def getGroupName(soup:bs4.BeautifulSoup)->str:
+def getGroupName(soup:BeautifulSoup)->str:
     '''
     This function is a part of the screwpie application, retriving
     group name from the topic table page.
@@ -105,7 +108,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
             i -= 1
             continue
     
-        soup = bs4.BeautifulSoup(res.text, 'lxml')
+        soup = BeautifulSoup(res.text, 'lxml')
         group_name = getGroupName(soup)
         table = soup.findAll("table", {"class": "olt"})
         rows = list(table)[0].findAll("tr", {"class":"", "id":""})
@@ -134,14 +137,14 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                         failure_urls.append(title_url)
                 error_counter += 1
         print('page wrote.')
-    print("Group %s collection done." % group_name)
+    print("Group %s collected and saved to %s\%s" % (group_name, os.getcwd(), filename))
     file.close()
     if error_counter:
         print('\nTotal failed topic number: %d topics!' % error_counter)
     return failure_urls
 
 
-def hasAuthor(person:str, tag:bs4.element.Tag)->bool: # just a printer for now
+def hasAuthor(person:str, tag)->bool: # just a printer for now
     '''
     This function is an add-on function that check if the interested
     author appeared in the group which is currently under process. If
@@ -177,7 +180,7 @@ def getPages(url:str, headers:dict):
     works fine, but somehow redandent.
     """
     res = requests.get(url, headers=headers)
-    psoup = bs4.BeautifulSoup(res.text, 'lxml')
+    psoup = BeautifulSoup(res.text, 'lxml')
     # the line below need to be validated. The needed message is in html tag
     # attribute value, the problem is how to extract it properly.
     paginator_list = psoup.select('div[class="paginator"] > span')
@@ -235,5 +238,5 @@ if __name__ == '__main__':
                 'spoil': base + 'spoil/discussion?start=',
                 'chen': base + 'chen19891018/discussion?start='}
 
-    fs = startOperation(url_dict["kplv"], 10, "test.csv")
+    fs = startOperation(url_dict["kplv"], 3, "test.csv")
     # mainProcess(1)
