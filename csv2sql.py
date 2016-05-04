@@ -5,8 +5,8 @@ with open('test.csv', encoding='utf8') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         if i < 10:
-            print(row)
-            print(type(row))
+            print(row[0])
+            # print(type(row))
             i += 1
         else:
             break

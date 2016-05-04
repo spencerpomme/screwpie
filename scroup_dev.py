@@ -115,7 +115,8 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
         if not len(rows):
             print("Empty page or something wrong!")
             continue
-        print('Scraping page %d/%d...' % (i+1, pages), '\r', end="")
+        print('Scraping page %d/%d...' % (i+1, pages))
+        time.sleep(0.5)
         for row in rows:
             title = row.find("td", {"class": "title"}).a.attrs["title"]
             title_url = row.find("td", {"class": "title"}).a.attrs["href"]
@@ -136,7 +137,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                 if title_url not in failure_urls:
                         failure_urls.append(title_url)
                 error_counter += 1
-        print('page %d wrote.        ' % i, '\r')
+        print('page %d wrote.' % (i+1))
     print("Group %s collected and saved to %s\%s" % (group_name, os.getcwd(), filename))
     file.close()
     if error_counter:
