@@ -77,13 +77,12 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                                                 "Gecko/20100101 Firefox/43.0",
                "Connection": "keep-alive"
                }
-    proxies = {'http':'http://192.99.246.183:9000'}
     # operation config
     start_page = 0
     error_counter = 0
     perpage = 25
     failure_urls = []
-    file = open(r'%s' % filename, 'w', newline='') # unicode...
+    file = open(r'%s' % filename, 'w', newline='', encoding='utf8')
     writer = csv.writer(file)
     if not pages:
         try:
@@ -235,4 +234,4 @@ if __name__ == '__main__':
                 'chen': base + 'chen19891018/discussion?start='}
 
     # fs = startOperation(url_dict["kplv"], 10, "test.csv")
-    mainProcess(2)
+    mainProcess(1)
