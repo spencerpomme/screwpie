@@ -200,15 +200,14 @@ def insertData(row:list):
                                        row[1], row[2], row[3], row[4], row[5])
               )
 """
-def mainProcess():
+def mainProcess(pages=None):
     start = time.clock()
     for value in url_dict.values():
         
         stamp = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         fln = 'testrun_%s.csv' % stamp
 
-    
-        failures = startOperation(value, filename=fln)
+        failures = startOperation(value, pages, filename=fln)
         if failures:
             print('[The urls below occured problem]:')
             for item in failures:
@@ -234,4 +233,4 @@ if __name__ == '__main__':
                 'chen': base + 'chen19891018/discussion?start='}
 
     # fs = startOperation(url_dict["kplv"], 10, "test.csv")
-    mainProcess()
+    mainProcess(10)
