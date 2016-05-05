@@ -2,7 +2,8 @@
 import csv
 import psycopg2
 
-conn = psycopg2.connect("dbname=douban user=postgres password=123456")
+secret = input("Please input db password!\n")
+conn = psycopg2.connect(database="douban", user="postgres", password=secret)
 curr = conn.cursor()
 
 with open('test.csv', encoding='utf8') as csvfile:
@@ -10,8 +11,9 @@ with open('test.csv', encoding='utf8') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         if i < 10:
-            print(row[-1])
-            print(type(row[-1]))
+            print(row)
+            curr.execute("INSERT INTO gzzf VALUES (%d, %s, %s, %s, %s, %d, %s);" % (
+                 row[0], row[1], row[2], row[3], row[4], row[5], row[6]))
             i += 1
         else:
             break
