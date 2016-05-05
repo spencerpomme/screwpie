@@ -124,7 +124,8 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
             author_url = row.find("td", {"nowrap": "nowrap"}).a.attrs["href"]
             follow = row.find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
             lastres = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
-                
+            if follow == "":
+                follow = "0"
             try:
                 writer.writerow([title, title_url, author.text,
                                  author_url, follow, lastres])

@@ -10,13 +10,9 @@ with open('test.csv', encoding='utf8') as csvfile:
     i = 0
     reader = csv.reader(csvfile)
     for row in reader:
-        if i < 10:
-            print(row)
-            print(len(row))
-            curr.execute("INSERT INTO gzzf VALUES (%d, '%s', '%s', '%s', '%s', %d, '%s');" % (
-                 i, row[0], row[1], row[2], row[3], int(row[4]), row[5]))
-            i += 1
-        else:
-            break
-curr.close()
+        print(row)
+        curr.execute("INSERT INTO gzzf VALUES (%d, %d)" % (i, int(row[4])))
+        i += 1
+    print('done')
+conn.commit()
 conn.close()
