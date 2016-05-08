@@ -23,7 +23,7 @@ def getdate(rawstr:str)->str:
     """
     datelist = rawstr.split(" ")
     if len(datelist) == 1:
-        return datelist
+        return datelist[0]
     elif len(datelist) == 2:
         return '2016-' + datelist[0]
     else:
