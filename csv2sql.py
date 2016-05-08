@@ -12,22 +12,34 @@ secret = input("Please input db password!\n")
 conn = psycopg2.connect(database=dtbase, user=usrname, password=secret)
 curr = conn.cursor()
 '''
+class FailDateRetrive(Exception):
+    def __repr__(self):
+        return "The date field retrived has error in it."
+
+
 def getdate(rawstr:str)->str:
     """
     This function returns the date in 20xx-xx-xx format.
     """
+    datelist = rawstr.split(" ")
+    if len(datelist) == 1:
+        return datelist
+    elif len(datelist) == 2:
+        return '2016-' + datelist[0]
+    else:
+        raise FailDateRetrive
 
-patt = re.compile("20\d\d-[0-1]\d-[0-3]\d")
-with open('test.csv', encoding='utf8') as csvfile:
-    i = 0
-    reader = csv.reader(csvfile)
-    for row in reader:
-        print(row)
-        title, title_url, author, author_url, follow = row[0:5]
-        datestring = getdate(row[5])
-        # curr.execute("INSERT INTO gzzf VALUES (%d, %d)" % (i, int(row[4])))
-        i += 1
-    print('done')
+def main():
+    with open('test.csv', encoding='utf8') as csvfile:
+        i = 0
+        reader = csv.reader(csvfile)
+        for row in reader:
+            print(row)
+            title, title_url, author, author_url, follow = row[0:5]
+            datestring = getdate(row[5])
+            # curr.execute("INSERT INTO gzzf VALUES (%d, %d)" % (i, int(row[4])))
+            i += 1
+        print('done')
 '''
 conn.commit()
 conn.close()
