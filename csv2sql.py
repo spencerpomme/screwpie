@@ -4,14 +4,6 @@ import psycopg2
 import datetime
 import re
 
-'''
-dtbase = input("Please input db name:\n")
-usrname = input("Please input username:\n")
-secret = input("Please input db password!\n")
-
-conn = psycopg2.connect(database=dtbase, user=usrname, password=secret)
-curr = conn.cursor()
-'''
 class FailDateRetrive(Exception):
     def __repr__(self):
         return "The date field retrived has error in it."
@@ -30,6 +22,17 @@ def getdate(rawstr:str)->str:
         raise FailDateRetrive
 
 def main():
+    """
+    Main process, insert csv file into chosen database.
+    """
+    dtbase, usrname, secret = ('douban', 'postgres', '123456')
+    """
+    dtbase = input("Please input db name:\n")
+    usrname = input("Please input username:\n")
+    secret = input("Please input db password!\n")
+    """
+    conn = psycopg2.connect(database=dtbase, user=usrname, password=secret)
+    curr = conn.cursor()
     with open('test.csv', encoding='utf8') as csvfile:
         i = 0
         reader = csv.reader(csvfile)
@@ -38,12 +41,14 @@ def main():
             title, title_url, author, author_url, follow = row[0:5]
             datestring = getdate(row[5])
             print(title, follow, datestring)
-            # curr.execute("INSERT INTO gzzf VALUES (%d, %d)" % (i, int(row[4])))
+            curr.execute("INSERT INTO kaopulove VALUES \
+                         (%d,'%s','%s','%s','%s',%d,'%s')"%(i, title, title_url,
+                          author, author_url, int(follow), datestring)
+                         )
             i += 1
         print('done')
-'''
-conn.commit()
-conn.close()
-'''
+    conn.commit()
+    conn.close()
 
-main()
+if __name__ == "__main__":
+    main()
