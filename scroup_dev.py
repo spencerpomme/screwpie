@@ -213,7 +213,7 @@ def mainProcess(pages=None):
     for value in url_dict.values():
         
         stamp = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        fln = 'testrun_%s.csv' % stamp
+        fln = '%s_%s.csv' % ('kplv', stamp)
 
         failures = startOperation(value, pages, filename=fln)
         if failures:
@@ -233,12 +233,14 @@ if __name__ == '__main__':
     # The following is for development test:
 
     base = 'https://www.douban.com/group/'
-    url_dict = {'thzf': base + 'tianhezufang/discussion?start=',
+    url_dict1 = {'thzf': base + 'tianhezufang/discussion?start=',
                 'gzzf': base + 'gz020/discussion?start=',
                 'kplv': base + 'kaopulove/discussion?start=',
                 'weixin': base + 'wexin/discussion?start=',
                 'spoil': base + 'spoil/discussion?start=',
                 'chen': base + 'chen19891018/discussion?start='}
 
-    fs = startOperation(url_dict["kplv"], pages=10, filename="test.csv")
-    # mainProcess(1)
+    url_dict = {'kplv': base + 'kaopulove/discussion?start='}
+
+    # fs = startOperation(url_dict["kplv"], filename="test.csv")
+    mainProcess()
