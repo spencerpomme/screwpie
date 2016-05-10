@@ -55,8 +55,8 @@ def csv2sql(filename:str, tablename: str, cursor):
             title, title_url, author, author_url, follow = row[0:5]
             datestring = getdate(row[5])
             # print(title, follow, datestring)
-            cursor.execute("INSERT INTO kaopulove VALUES \
-                           (%d,'%s','%s','%s','%s',%d,'%s')"%(i, title, title_url,
+            cursor.execute('INSERT INTO kaopulove VALUES \
+                           (%d,"%s","%s","%s","%s","%d","%s")'%(i, title, title_url,
                             author, author_url, int(follow), datestring)
                            )
             i += 1
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     conn = psycopg2.connect(database=dtbase, user=usrname, password=secret)
     curr = conn.cursor()
     curr.execute("drop table %s;" % tablename)
-    csv2sql("test.csv", tablename, curr)
+    csv2sql("kplv_20160509233345.csv", tablename, curr)
     conn.commit()
     conn.close()
     print("transaction finished.")
