@@ -66,8 +66,11 @@ def getGroupName(soup:BeautifulSoup)->str:
     This function is a part of the screwpie application, retriving
     group name from the topic table page.
     '''
-    groupname = soup.select('div > div > div[class="info"]\
-                            > div[class="title"] > a')[0].getText()
+    gpntag = soup.select('div > div > div[class="info"] > div[class="title"] > a')
+    try:
+        groupname = gpntag[0].getText()
+    except:
+        groupname = "Fail to retrive, but you can tell it from file name.\n"
     return groupname
 
 def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
@@ -85,62 +88,66 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
     error_counter = 0
     perpage = 25
     failure_urls = []
-    file = open(r'%s' % filename, 'w', newline='', encoding='utf8')
-    writer = csv.writer(file)
-    if not pages:
-        try:
-            pages = getPages(init_url+'0', headers)
-        except Exception as e:
-            print("Exception occured:")
-            print(e)
-            print("Set page number to default 5 pages.")
-            pages = 5
-    print("Total pages of group to be scraped:", pages)
-    for i in range(pages):
-        url = init_url + str(start_page + perpage * i)
-        time.sleep(1)
-        try:
-            res = requests.get(url, headers=headers)
-        except Exception as e:
-            print('There is a problem:', e)
-            print('Waiting 10 seconds to recover...')
-            time.sleep(10)
-            i -= 1
-            continue
-    
-        soup = BeautifulSoup(res.text, 'lxml')
-        group_name = getGroupName(soup)
-        table = soup.findAll("table", {"class": "olt"})
-        rows = list(table)[0].findAll("tr", {"class":"", "id":""})
-        if not len(rows):
-            print("Empty page or something wrong!")
-            continue
-        print('Scraping page %d/%d...' % (i+1, pages))
-        time.sleep(0.5)
-        for row in rows:
-            title = row.find("td", {"class": "title"}).a.attrs["title"]
-            title_url = row.find("td", {"class": "title"}).a.attrs["href"]
-            author = row.find("td", {"nowrap": "nowrap"}).a
-            author_url = row.find("td", {"nowrap": "nowrap"}).a.attrs["href"]
-            follow = row.find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
-            lastres = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
-            if follow == "":
-                follow = "0"
+    try:
+        file = open(r'%s' % filename, 'w', newline='', encoding='utf8')
+        writer = csv.writer(file)
+        if not pages:
             try:
-                writer.writerow([title, title_url, author.text,
-                                 author_url, follow, lastres])
-                # detect if target appeared
-                result = hasAuthor('ToSaturday', author)
+                pages = getPages(init_url+'0', headers)
             except Exception as e:
-                print('Error occured on page %d' % (i+1))
-                print(*[title, author.text])
-                print('error message:', e)
-                if title_url not in failure_urls:
-                        failure_urls.append(title_url)
-                error_counter += 1
-        print('page %d wrote.' % (i+1))
-    print("Group %s collected and saved to %s\%s" % (group_name, os.getcwd(), filename))
-    file.close()
+                print("Exception occured:")
+                print(e)
+                print("Set page number to default 5 pages.")
+                pages = 5
+        print("Total pages of group to be scraped:", pages)
+        group_name = None
+        for i in range(pages):
+            url = init_url + str(start_page + perpage * i)
+            time.sleep(1)
+            try:
+                res = requests.get(url, headers=headers)
+            except Exception as e:
+                print('There is a problem:', e)
+                print('Waiting 10 seconds to recover...')
+                time.sleep(10)
+                i -= 1
+                continue
+        
+            soup = BeautifulSoup(res.text, 'lxml')
+            if not group_name:
+                group_name = getGroupName(soup)
+            table = soup.findAll("table", {"class": "olt"})
+            rows = list(table)[0].findAll("tr", {"class":"", "id":""})
+            if not len(rows):
+                print("Empty page or something wrong!")
+                continue
+            print('Scraping page %d/%d...' % (i+1, pages))
+            time.sleep(0.5)
+            for row in rows:
+                title = row.find("td", {"class": "title"}).a.attrs["title"]
+                title_url = row.find("td", {"class": "title"}).a.attrs["href"]
+                author = row.find("td", {"nowrap": "nowrap"}).a
+                author_url = row.find("td", {"nowrap": "nowrap"}).a.attrs["href"]
+                follow = row.find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
+                lastres = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
+                if follow == "":
+                    follow = "0"
+                try:
+                    writer.writerow([title, title_url, author.text,
+                                     author_url, follow, lastres])
+                    # detect if target appeared
+                    result = hasAuthor('ToSaturday', author)
+                except Exception as e:
+                    print('Error occured on page %d' % (i+1))
+                    print(*[title, author.text])
+                    print('error message:', e)
+                    if title_url not in failure_urls:
+                            failure_urls.append(title_url)
+                    error_counter += 1
+            print('page %d wrote.' % (i+1))
+        print("Group %s collected and saved to %s\%s" % (group_name, os.getcwd(), filename))
+    finally:
+        file.close()
     if error_counter:
         print('\nTotal failed topic number: %d topics!' % error_counter)
     return failure_urls
@@ -209,24 +216,29 @@ def insertData(row:list):
 
 
 def mainProcess(pages=None):
-    start = time.clock()
-    for value in url_dict.values():
+    try:
+        start = time.clock()
+        for value in url_dict.values():
         
-        stamp = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        fln = '%s_%s.csv' % ('kplv', stamp)
+            stamp = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+            fln = '%s_%s.csv' % ('kplv', stamp)
 
-        failures = startOperation(value, pages, filename=fln)
-        if failures:
-            print('[The urls below occured problem]:')
-            for item in failures:
-                print(item)
-        else:
-            print('All pages successfully scraped!')
-    end = time.clock()
-    total_time = end - start
-    m , s = divmod(total_time, 60)
-    h , m = divmod(m, 60)
-    print ("It takes %d hours %d minutes %.2f seconds." % (h, m, s))
+            failures = startOperation(value, pages, filename=fln)
+            if failures:
+                print('[The urls below occured problem]:')
+                for item in failures:
+                    print(item)
+            else:
+                print('All pages successfully scraped!')
+    except Exception as e:
+        print(e)
+        print("Above error occured.")
+    finally:
+        end = time.clock()
+        total_time = end - start
+        m , s = divmod(total_time, 60)
+        h , m = divmod(m, 60)
+        print ("It takes %d hours %d minutes %.2f seconds." % (h, m, s))
 
 
 if __name__ == '__main__':
@@ -242,5 +254,5 @@ if __name__ == '__main__':
 
     url_dict = {'kplv': base + 'kaopulove/discussion?start='}
 
-    # fs = startOperation(url_dict["kplv"], filename="test.csv")
-    mainProcess()
+    fs = startOperation(url_dict["kplv"], pages=5, filename="test.csv")
+    # mainProcess()
