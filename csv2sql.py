@@ -55,11 +55,12 @@ def csv2sql(filename:str, tablename: str, cursor):
             #print(row)
             title, title_url, author, author_url, follow = row[0:5]
             datestring = getdate(row[5])
-            # print(title, follow, datestring)
+            #print(title, title_url, author, author_url, follow, datestring)
+
             cursor.execute("""INSERT INTO kaopulove VALUES 
-                              (%d, %s, %s, %s, %s, %d, %s);""",
+                              (%s, %s, %s, %s, %s, %s, %s);""",
                               (i, title, title_url, author,
-                               author_url, int(follow), datestring)
+                               author_url, follow, datestring)
                           )
             i += 1
         print('done')
