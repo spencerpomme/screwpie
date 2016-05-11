@@ -50,15 +50,17 @@ def csv2sql(filename:str, tablename: str, cursor):
         i = 0
         reader = csv.reader(csvfile, cursor)
         createTable(tablename, cursor)
+        print(tablename)
         for row in reader:
             #print(row)
             title, title_url, author, author_url, follow = row[0:5]
             datestring = getdate(row[5])
             # print(title, follow, datestring)
-            cursor.execute('INSERT INTO kaopulove VALUES \
-                           (%d,"%s","%s","%s","%s","%d","%s")'%(i, title, title_url,
-                            author, author_url, int(follow), datestring)
-                           )
+            cursor.execute("""INSERT INTO kaopulove VALUES 
+                              (%d, %s, %s, %s, %s, %d, %s);""",
+                              (i, title, title_url, author,
+                               author_url, int(follow), datestring)
+                          )
             i += 1
         print('done')
 
