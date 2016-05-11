@@ -21,14 +21,15 @@ def getdate(rawstr:str)->str:
     else:
         raise FailDateRetrive
 
-def createTable(tbname:str, cursor):
+def createTable(cursor, tbname:str):
     """
     This function create a new table in database.
     tbname: the name of to be created table
     configDict: field name as key and tuple (type, constrain) as value
 
     """
-    cursor.execute("""CREATE TABLE %s (
+    cursor.execute("""
+            CREATE TABLE %s (
             id INTEGER PRIMARY KEY,
             title VARCHAR(256) ,
             title_url VARCHAR(256),
@@ -37,6 +38,8 @@ def createTable(tbname:str, cursor):
             follow INTEGER ,
             lastres DATE NOT NULL);
             """ % tbname)
+    print("Table %s created.\n" % tbname)
+
 
 def csv2sql(filename:str, tablename: str, cursor):
     """
@@ -56,7 +59,7 @@ def csv2sql(filename:str, tablename: str, cursor):
             datestring = getdate(row[5])
             # print(title, follow, datestring)
             cursor.execute('INSERT INTO kaopulove VALUES \
-                           (%d,"%s","%s","%s","%s","%d","%s")'%(i, title, title_url,
+                           (%d,"%s","%s","%s","%s",%d,"%s");'%(i, title, title_url,
                             author, author_url, int(follow), datestring)
                            )
             i += 1
@@ -64,11 +67,12 @@ def csv2sql(filename:str, tablename: str, cursor):
 
 if __name__ == "__main__":
     tablename = "kaopulove"
-    dtbase, usrname, secret = ('douban', 'postgres', '123456')
+    dtbase, usrname, secret = ('douban', 'zhangpingcheng', '123456')
     conn = psycopg2.connect(database=dtbase, user=usrname, password=secret)
     curr = conn.cursor()
-    curr.execute("drop table %s;" % tablename)
-    csv2sql("kplv_20160509233345.csv", tablename, curr)
+    createTable(curr, tablename)
+    # curr.execute("drop table %s;" % tablename)
+    # csv2sql("kplv.csv", tablename, curr)
     conn.commit()
     conn.close()
     print("transaction finished.")

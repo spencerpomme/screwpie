@@ -254,5 +254,5 @@ if __name__ == '__main__':
 
     url_dict = {'kplv': base + 'kaopulove/discussion?start='}
 
-    fs = startOperation(url_dict["kplv"], pages=5, filename="test.csv")
+    fs = startOperation(url_dict["kplv"], pages=5, filename="kplv.csv")
     # mainProcess()
