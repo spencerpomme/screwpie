@@ -52,16 +52,19 @@ def csv2sql(filename:str, tablename: str, cursor):
     with open(filename, encoding='utf8') as csvfile:
         i = 0
         reader = csv.reader(csvfile, cursor)
-        createTable(tablename, cursor)
+        createTable(cursor, tablename)
         for row in reader:
             #print(row)
             title, title_url, author, author_url, follow = row[0:5]
             datestring = getdate(row[5])
-            # print(title, follow, datestring)
-            cursor.execute('INSERT INTO kaopulove VALUES \
-                           (%d,"%s","%s","%s","%s",%d,"%s");'%(i, title, title_url,
+            print(title, follow, datestring)
+            print('61: start cursor execute')
+            cursor.execute("""INSERT INTO kaopulove VALUES
+                           (%d,'%s','%s','%s','%s',%d,'%s');
+                           """ % (i, title, title_url,
                             author, author_url, int(follow), datestring)
                            )
+            print('66: end cursor execute')
             i += 1
         print('done')
 
@@ -70,9 +73,9 @@ if __name__ == "__main__":
     dtbase, usrname, secret = ('douban', 'zhangpingcheng', '123456')
     conn = psycopg2.connect(database=dtbase, user=usrname, password=secret)
     curr = conn.cursor()
-    createTable(curr, tablename)
-    # curr.execute("drop table %s;" % tablename)
-    # csv2sql("kplv.csv", tablename, curr)
+    # createTable(curr, tablename)
+    curr.execute("drop table %s;" % tablename)
+    csv2sql("kplv.csv", tablename, curr)
     conn.commit()
     conn.close()
     print("transaction finished.")
