@@ -136,7 +136,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                     writer.writerow([title, title_url, author.text,
                                      author_url, follow, lastres])
                     # detect if target appeared
-                    result = hasAuthor('ToSaturday', author)
+                    result = hasAuthor('replace_with_author_name', author)
                 except Exception as e:
                     print('Error occured on page %d' % (i+1))
                     print(*[title, author.text])
@@ -218,7 +218,7 @@ def insertData(row:list):
 def mainProcess(pages=None):
     try:
         start = time.clock()
-        for value in url_dict.values():
+        for value in url_dict1.values():
         
             stamp = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
             fln = '%s_%s.csv' % ('kplv', stamp)
@@ -245,14 +245,10 @@ if __name__ == '__main__':
     # The following is for development test:
 
     base = 'https://www.douban.com/group/'
-    url_dict1 = {'thzf': base + 'tianhezufang/discussion?start=',
-                'gzzf': base + 'gz020/discussion?start=',
+    url_dict1 = {'gzlv': base + 'GuangZhoulove/discussion?start=',
+                'npy': base + 'nanpengyou/discussion?start=',
                 'kplv': base + 'kaopulove/discussion?start=',
                 'weixin': base + 'wexin/discussion?start=',
-                'spoil': base + 'spoil/discussion?start=',
-                'chen': base + 'chen19891018/discussion?start='}
+                'ass': base + 'asshole/discussion?start='}
 
-    url_dict = {'kplv': base + 'kaopulove/discussion?start='}
-
-    fs = startOperation(url_dict["kplv"], pages=5, filename="test.csv")
-    # mainProcess()
+    mainProcess()
