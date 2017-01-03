@@ -1,4 +1,4 @@
-#! python3
+#
 # This script is created for scraping douban group topics
 # Should be able to scrape [topic,author,follow,lastresponse]
 # info of all group topics
