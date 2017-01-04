@@ -28,6 +28,12 @@ class BaseCrawler(object):
     '''
     The base class of specific crawlers, a placeholder.
 
+    This base class has the following basic functionalities:
+        + Set base url to start crawling;
+        + Set a csv file name to save the temp data;
+        + Provide test crawling run, i.e. no saving data just print out;
+        + Provide a data structure reader to set SQL format;
+
     Attributes:
             baseURL: The page where crawler starts crawling.
             saveName: The temp save csv file name to hold collected data.
@@ -59,6 +65,29 @@ class BaseCrawler(object):
             self.save_name = name
         else:
             raise CSVfileNameError
+
+
+    def create_tempfile(self, directory=None):
+        '''
+        Instance method that returns a pointer of a new temp file location.
+        By default the saving location is current working directory.
+
+        Args:
+            directory: The location that wish to save the temp csv file.
+        Returns:
+            An IOTextWrapper object.
+        Raises:
+            CSVfileNameError: when the directory and self.save_name fail to
+            form a legal directory location.
+
+        TODO: It may not be a good practice, which is to say, create a IO
+        object and left it unclosed by just returning it. So change it in
+        the future shall any problem occurs.
+        '''
+        if not directory:
+            location = os.getcwd()
+
+
 
 
     def _is_legal_url(url:str)->bool:
