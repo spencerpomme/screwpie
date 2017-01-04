@@ -28,32 +28,38 @@ class BaseCrawler(object):
     '''
     The base class of specific crawlers, a placeholder.
 
-    This class as a super class of further custimized classes has 5 methods:
-    '''
-    def __init__(self):
-        '''
-        fields:
+    Attributes:
             baseURL: The page where crawler starts crawling.
             saveName: The temp save csv file name to hold collected data.
+    '''
+
+    def __init__(self):
+        '''
+        Constructor, can be customized in subclasses.
         '''
         self.base_url = ""
         self.save_name = ""
 
+
     def set_base_url(self, url:str):
         '''
-        Set base url of the crawler.
+        Instance method that sets base url of the crawler.
         '''
         if _is_legal_url(url):
             self.base_url = url
         else:
             raise WrongURL
 
+
     def set_save_name(self, name:str):
-        '''Set file name of temp csv file to hold data'''
+        '''
+        Instance method that sets file name of temp csv file to hold data.
+        '''
         if _is_legal_file_name(name):
             self.save_name = name
         else:
             raise CSVfileNameError
+
 
     def _is_legal_url(url:str)->bool:
         '''
@@ -61,6 +67,7 @@ class BaseCrawler(object):
         Return True by default, need add condition in subclass.
         '''
         return True
+
 
     def _is_legal_file_name(name:str):
         '''
@@ -73,12 +80,3 @@ class BaseCrawler(object):
         if result == None:
             return False
         return True
-
-    def save_data_csv(self):
-        '''
-        Instance method 
-        
-
-
-
-
