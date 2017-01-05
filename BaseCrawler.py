@@ -86,8 +86,12 @@ class BaseCrawler(object):
         '''
         if not directory:
             location = os.getcwd()
-
-
+        try:
+            temp_csv = open(r'%s/%s' % (directory, self.save_name))
+        except Exception as e:
+            print(e)
+            os.remove(r'%s/%s' % (directory, self.save_name))
+        return temp_csv
 
 
     def _is_legal_url(url:str)->bool:
