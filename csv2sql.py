@@ -4,12 +4,14 @@ import psycopg2
 import datetime
 import re
 
+
 class FailDateRetrive(Exception):
+
     def __repr__(self):
         return "The date field retrived has error in it."
 
 
-def getdate(rawstr:str)->str:
+def getdate(rawstr: str)->str:
     """
     This function returns the date in 20xx-xx-xx format.
     """
@@ -21,7 +23,8 @@ def getdate(rawstr:str)->str:
     else:
         raise FailDateRetrive
 
-def createTable(tbname:str, cursor):
+
+def createTable(tbname: str, cursor):
     """
     This function create a new table in database.
     tbname: the name of to be created table
@@ -38,7 +41,8 @@ def createTable(tbname:str, cursor):
             lastres DATE NOT NULL);
             """ % tbname)
 
-def csv2sql(filename:str, tablename: str, cursor):
+
+def csv2sql(filename: str, tablename: str, cursor):
     """
     Main process, insert csv file into chosen database.
 
@@ -52,16 +56,16 @@ def csv2sql(filename:str, tablename: str, cursor):
         createTable(tablename, cursor)
         print(tablename)
         for row in reader:
-            #print(row)
+            # print(row)
             title, title_url, author, author_url, follow = row[0:5]
             datestring = getdate(row[5])
             #print(title, title_url, author, author_url, follow, datestring)
 
             cursor.execute("""INSERT INTO kaopulove VALUES 
                               (%s, %s, %s, %s, %s, %s, %s);""",
-                              (i, title, title_url, author,
+                           (i, title, title_url, author,
                                author_url, follow, datestring)
-                          )
+                           )
             i += 1
         print('done')
 
