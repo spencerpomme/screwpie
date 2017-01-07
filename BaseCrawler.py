@@ -29,14 +29,12 @@ class BaseCrawler(object):
     The base class of specific crawlers, a placeholder.
 
     This base class has the following basic functionalities:
-        + Set base url to start crawling;
-        + Set a csv file name to save the temp data;
-        + Provide test crawling run, i.e. no saving data just print out;
-        + Provide a data structure reader to set SQL format;
+        + Set base url to start crawling
+        + Set a csv file name to save the temp data
 
     Attributes:
-            baseURL: The page where crawler starts crawling.
-            saveName: The temp save csv file name to hold collected data.
+            base_url: The page where crawler starts crawling
+            save_name: The temp save csv file name to hold collected data
     '''
 
     def __init__(self):
@@ -73,12 +71,12 @@ class BaseCrawler(object):
         By default the saving location is current working directory.
 
         Args:
-            directory: The location that wish to save the temp csv file.
+            directory: The location that wish to save the temp csv file
         Returns:
-            An IOTextWrapper object.
+            An IOTextWrapper object
         Raises:
             CSVfileNameError: when the directory and self.save_name fail to
-            form a legal directory location.
+            form a legal directory location
 
         TODO: It may not be a good practice, which is to say, create a IO
         object and left it unclosed by just returning it. So change it in
@@ -98,6 +96,7 @@ class BaseCrawler(object):
         '''
         Class method that determines whether an url is legal.
         Return True by default, need add condition in subclass.
+        TODO: to be implemented using regex
         '''
         return True
 
