@@ -3,6 +3,8 @@ This is a web crawler collecting ZHIHU & Douban data.
 
 BaseStructure is an empty class that to be customized for specific websites.
 '''
+
+
 class BaseStructure(object):
     '''
     This class creates basic html page structure analysis object.
@@ -16,13 +18,13 @@ class BaseStructure(object):
             total_page: total pages to be scaped
 
     '''
+
     def __init__(self):
         '''
         Creates a data field and total page number.
         '''
         self.fields = []
         self.total_page = 0
-
 
     def __repr__(self):
         '''
@@ -36,7 +38,6 @@ class BaseStructure(object):
         else:
             return self.fields
 
-            
     def set_total_page(self, url, mode='Test', page_num=1)->int:
         '''
         Gets total pages to be scaped in one mission.
@@ -58,10 +59,11 @@ class BaseStructure(object):
         else:
             raise NotImplementedError("Need to define get_total_page().")
 
-
     def set_fields(self, url):
         '''
         Set field rules to scape data from page using bs4.
         To be defined in subclass.
 
         Returns
+        '''
+        pass

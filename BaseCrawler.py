@@ -11,18 +11,24 @@ import os
 
 # Project defined exceptions:
 
+
 class CSVfileNameError(Exception):
+
     def __str__(self):
         return 'Invalid file name, please add .csv at the end of name.'
 
+
 class WrongURL(Exception):
+
     def __str__(self):
         return 'Invalid url input, input should be valid url of douban group.'
 
+
 class NoPageNumber(Exception):
+
     def __str__(self):
         return 'Failed to get total group topic page numbers.'
-    
+
 
 class BaseCrawler(object):
     '''
@@ -44,8 +50,7 @@ class BaseCrawler(object):
         self.base_url = ""
         self.save_name = ""
 
-
-    def set_base_url(self, url:str):
+    def set_base_url(self, url: str):
         '''
         Instance method that sets base url of the crawler.
         '''
@@ -54,8 +59,7 @@ class BaseCrawler(object):
         else:
             raise WrongURL
 
-
-    def set_save_name(self, name:str):
+    def set_save_name(self, name: str):
         '''
         Instance method that sets file name of temp csv file to hold data.
         '''
@@ -63,7 +67,6 @@ class BaseCrawler(object):
             self.save_name = name
         else:
             raise CSVfileNameError
-
 
     def create_tempfile(self, directory=None):
         '''
@@ -91,8 +94,7 @@ class BaseCrawler(object):
             os.remove(r'%s/%s' % (directory, self.save_name))
         return temp_csv
 
-
-    def _is_legal_url(url:str)->bool:
+    def _is_legal_url(url: str)->bool:
         '''
         Class method that determines whether an url is legal.
         Return True by default, need add condition in subclass.
@@ -100,8 +102,7 @@ class BaseCrawler(object):
         '''
         return True
 
-
-    def _is_legal_file_name(name:str):
+    def _is_legal_file_name(name: str):
         '''
         Class method that determines whether an file name is legal.
         '''
@@ -109,6 +110,6 @@ class BaseCrawler(object):
             return False
         legal_pattern = re.compile('(?<!\s)\w+.csv(?!\w+)')
         result = legal_pattern.match(name)
-        if result == None:
+        if result is None:
             return False
         return True
