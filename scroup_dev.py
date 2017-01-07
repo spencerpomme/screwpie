@@ -12,18 +12,24 @@ import csv
 import os
 # import psycopg2
 
+
 class CSVfileNameError(Exception):
+
     def __str__(self):
         return 'Invalid file name, please add .csv at the end of name.'
 
+
 class WrongURL(Exception):
+
     def __str__(self):
         return 'Invalid url input, input should be valid url of douban group.'
 
+
 class NoPageNumber(Exception):
+
     def __str__(self):
         return 'Failed to get total group topic page numbers.'
-    
+
 
 def initialization():
     '''
@@ -42,7 +48,7 @@ def initialization():
         if not pagenum:
             try:
                 pagenum = int(input('Please enter the page numbers you want'
-                                ' to scrape:'))
+                                    ' to scrape:'))
             except ValueError:
                 print('Please enter an integer!')
                 pagenum = None
@@ -50,7 +56,7 @@ def initialization():
         if not filename:
             try:
                 filename = input('Please enter the file name to save data'
-                         '(file name must include postfix ".csv"):')
+                                 '(file name must include postfix ".csv"):')
                 if filename[-4:] != '.csv':
                     raise CSVfileNameError
             except CSVfileNameError as cfne:
@@ -61,26 +67,29 @@ def initialization():
             break
     return (url, pagenum, filename)
 
-def getGroupName(soup:BeautifulSoup)->str:
+
+def getGroupName(soup: BeautifulSoup)->str:
     '''
     This function is a part of the screwpie application, retriving
     group name from the topic table page.
     '''
-    gpntag = soup.select('div > div > div[class="info"] > div[class="title"] > a')
+    gpntag = soup.select(
+        'div > div > div[class="info"] > div[class="title"] > a')
     try:
         groupname = gpntag[0].getText()
     except:
         groupname = "Fail to retrive, but you can tell it from file name.\n"
     return groupname
 
-def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
+
+def startOperation(init_url: str, pages: int=None, filename: str='TESTCSV')->list:
     '''
     type init_url: str
     rtype: list
     '''
     # proxy config
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) "
-                                                "Gecko/20100101 Firefox/43.0",
+               "Gecko/20100101 Firefox/43.0",
                "Connection": "keep-alive"
                }
     # operation config
@@ -93,7 +102,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
         writer = csv.writer(file)
         if not pages:
             try:
-                pages = getPages(init_url+'0', headers)
+                pages = getPages(init_url + '0', headers)
             except Exception as e:
                 print("Exception occured:")
                 print(e)
@@ -112,24 +121,27 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                 time.sleep(10)
                 i -= 1
                 continue
-        
+
             soup = BeautifulSoup(res.text, 'lxml')
             if not group_name:
                 group_name = getGroupName(soup)
             table = soup.findAll("table", {"class": "olt"})
-            rows = list(table)[0].findAll("tr", {"class":"", "id":""})
+            rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
             if not len(rows):
                 print("Empty page or something wrong!")
                 continue
-            print('Scraping page %d/%d...' % (i+1, pages))
+            print('Scraping page %d/%d...' % (i + 1, pages))
             time.sleep(0.5)
             for row in rows:
                 title = row.find("td", {"class": "title"}).a.attrs["title"]
                 title_url = row.find("td", {"class": "title"}).a.attrs["href"]
                 author = row.find("td", {"nowrap": "nowrap"}).a
-                author_url = row.find("td", {"nowrap": "nowrap"}).a.attrs["href"]
-                follow = row.find(lambda tag: len(tag.attrs)==2 and tag.name=="td").text
-                lastres = row.find("td", {"nowrap": "nowrap", "class": "time"}).text
+                author_url = row.find(
+                    "td", {"nowrap": "nowrap"}).a.attrs["href"]
+                follow = row.find(lambda tag: len(tag.attrs)
+                                  == 2 and tag.name == "td").text
+                lastres = row.find(
+                    "td", {"nowrap": "nowrap", "class": "time"}).text
                 if follow == "":
                     follow = "0"
                 try:
@@ -138,14 +150,15 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
                     # detect if target appeared
                     result = hasAuthor('replace_with_author_name', author)
                 except Exception as e:
-                    print('Error occured on page %d' % (i+1))
+                    print('Error occured on page %d' % (i + 1))
                     print(*[title, author.text])
                     print('error message:', e)
                     if title_url not in failure_urls:
-                            failure_urls.append(title_url)
+                        failure_urls.append(title_url)
                     error_counter += 1
-            print('page %d wrote.' % (i+1))
-        print("Group %s collected and saved to %s\%s" % (group_name, os.getcwd(), filename))
+            print('page %d wrote.' % (i + 1))
+        print("Group %s collected and saved to %s\%s" %
+              (group_name, os.getcwd(), filename))
     finally:
         file.close()
     if error_counter:
@@ -153,7 +166,7 @@ def startOperation(init_url:str, pages:int=None, filename:str='TESTCSV')->list:
     return failure_urls
 
 
-def hasAuthor(person:str, tag)->bool: # just a printer for now
+def hasAuthor(person: str, tag)->bool:  # just a printer for now
     '''
     This function is an add-on function that check if the interested
     author appeared in the group which is currently under process. If
@@ -171,7 +184,7 @@ def hasAuthor(person:str, tag)->bool: # just a printer for now
         return False
 
 
-def searchDate(date:str, groups:list)->list:
+def searchDate(date: str, groups: list)->list:
     '''
     This function should be capable of searching a douban group or multiple
     groups' topics within a certain time period or date.
@@ -183,7 +196,7 @@ def searchDate(date:str, groups:list)->list:
     raise NotImplementedError
 
 
-def getPages(url:str, headers:dict):
+def getPages(url: str, headers: dict):
     """
     This function gets total page number of a group discussion.
     works fine, but somehow redandent.
@@ -197,7 +210,7 @@ def getPages(url:str, headers:dict):
         return int(paginator_list[1]['data-total-page'])
     else:
         raise NoPageNumber
-    
+
 
 """
 def insertData(row:list):
@@ -219,7 +232,7 @@ def mainProcess(pages=None):
     try:
         start = time.clock()
         for value in url_dict1.values():
-        
+
             stamp = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
             fln = '%s_%s.csv' % ('kplv', stamp)
 
@@ -236,9 +249,9 @@ def mainProcess(pages=None):
     finally:
         end = time.clock()
         total_time = end - start
-        m , s = divmod(total_time, 60)
-        h , m = divmod(m, 60)
-        print ("It takes %d hours %d minutes %.2f seconds." % (h, m, s))
+        m, s = divmod(total_time, 60)
+        h, m = divmod(m, 60)
+        print("It takes %d hours %d minutes %.2f seconds." % (h, m, s))
 
 
 if __name__ == '__main__':
@@ -246,9 +259,9 @@ if __name__ == '__main__':
 
     base = 'https://www.douban.com/group/'
     url_dict1 = {'gzlv': base + 'GuangZhoulove/discussion?start=',
-                'npy': base + 'nanpengyou/discussion?start=',
-                'kplv': base + 'kaopulove/discussion?start=',
-                'weixin': base + 'wexin/discussion?start=',
-                'ass': base + 'asshole/discussion?start='}
+                 'npy': base + 'nanpengyou/discussion?start=',
+                 'kplv': base + 'kaopulove/discussion?start=',
+                 'weixin': base + 'wexin/discussion?start=',
+                 'ass': base + 'asshole/discussion?start='}
 
     mainProcess()
