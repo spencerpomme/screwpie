@@ -66,4 +66,4 @@ class BaseStructure(object):
 
         Returns
         '''
-        pass
+        raise NotImplementedError("Define scaping rule for specific websites.")
