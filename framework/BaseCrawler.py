@@ -1,5 +1,5 @@
 '''
-This is a web crawler collecting ZHIHU & Douban data.
+This is a web crawler framework that help collecting ZHIHU & Douban data.
 '''
 
 from bs4 import BeautifulSoup

@@ -1,7 +1,7 @@
 '''
-This is a web crawler collecting ZHIHU & Douban data.
+This is a web crawler framework that help collecting ZHIHU & Douban data.
 
-BaseStructure is an empty class that to be customized for specific websites.
+BaseStructure is an base class that to be customized for specific websites.
 '''
 
 
