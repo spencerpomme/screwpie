@@ -37,10 +37,12 @@ class BaseCrawler(object):
     This base class has the following basic functionalities:
         + Set base url to start crawling
         + Set a csv file name to save the temp data
+        + Gets total web pages to be scaped
 
     Attributes:
             base_url: The page where crawler starts crawling
             save_name: The temp save csv file name to hold collected data
+            total_page: total pages to be scaped
     '''
 
     def __init__(self):
@@ -49,6 +51,7 @@ class BaseCrawler(object):
         '''
         self.base_url = ""
         self.save_name = ""
+        self.total_page = 0
 
     def set_base_url(self, url: str):
         '''
@@ -67,6 +70,27 @@ class BaseCrawler(object):
             self.save_name = name
         else:
             raise CSVfileNameError
+
+    def set_total_page(self, url, mode='Test', page_num=1)->int:
+        '''
+        Gets total pages to be scaped in one mission.
+
+        Specific page structure rule needs to be defined in subclass, here
+        provides test features.
+
+        Attributes:
+            url: target webpage url
+            mode: if mode == 'Test' then enable test feature
+            page_num: defaut scape page number set to 1
+        Returns: 
+            An integer page number
+        Raises: 
+            NotImplementedError
+        '''
+        if mode == 'Test':
+            return page_num
+        else:
+            raise NotImplementedError("Need to define get_total_page().")
 
     def create_tempfile(self, directory=None):
         '''
