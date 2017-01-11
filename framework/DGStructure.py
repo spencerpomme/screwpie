@@ -7,6 +7,7 @@ group web page.
 
 from BaseStructure import BaseStructure
 from bs4 import BeautifulSoup
+from types import MethodType
 
 
 class DGStructure(BaseStructure):
@@ -34,12 +35,12 @@ class DGStructure(BaseStructure):
                 data_row: A bs4.element.Tag object that contains a row
                 of douban group posts.
         Attributes:
-                title      : 
-                title_url  :
-                author     :
-                author_url :
-                follow_num :
-                time       :
+                title      : title of the post in the table
+                title_url  : url links to the post page
+                author     : author of the post
+                author_url : url links to the author's homepage
+                follow_num : reply number of the post
+                time       : last reply time of the post
         '''
         self.title = data_row.find('td', {'class': 'title'}.a.attrs['title'])
         self.title_url = data_row.find(
@@ -54,5 +55,11 @@ class DGStructure(BaseStructure):
         if self.follow_num == "":
             self.follow_num = "0"
 
-    def get_row_data(self):
-        pass
+    def get_row_data(self)->list:
+        '''
+        This method return a list of all Attributes aquired from douban group.
+        '''
+        attrs = [i for i in dir(self) if not i.startswith('__')
+                 and not isinstance(i, MethodType)]
+        assert len(attrs) == 6
+        return attrs
