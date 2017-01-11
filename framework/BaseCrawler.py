@@ -2,15 +2,7 @@
 This is a web crawler framework that help collecting ZHIHU & Douban data.
 '''
 
-from bs4 import BeautifulSoup
-import requests
-import datetime
-import time
-import csv
 import os
-
-# Project defined exceptions:
-
 
 class CSVfileNameError(Exception):
 
