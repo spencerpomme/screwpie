@@ -66,6 +66,7 @@ class DGStructure(BaseStructure):
 
         for field in fields:
             assert not isinstance(field, FunctionType)
+            assert field is not None
         return fields
 
 
