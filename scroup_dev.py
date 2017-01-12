@@ -264,4 +264,4 @@ if __name__ == '__main__':
                  'weixin': base + 'wexin/discussion?start=',
                  'ass': base + 'asshole/discussion?start='}
 
-    mainProcess()
+    mainProcess(1)

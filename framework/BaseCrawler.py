@@ -71,13 +71,13 @@ class BaseCrawler(object):
         provides test features.
 
         Attributes:
-            url: target webpage url
-            mode: if mode == 'Test' then enable test feature
-            page_num: defaut scape page number set to 1
+                url      : target webpage url
+                mode     : if mode == 'Test' then enable test feature
+                page_num : defaut scape page number set to 1
         Returns: 
-            An integer page number
+                An integer page number
         Raises: 
-            NotImplementedError
+                NotImplementedError
         '''
         if mode == 'Test':
             return page_num
@@ -90,12 +90,12 @@ class BaseCrawler(object):
         By default the saving location is current working directory.
 
         Args:
-            directory: The location that wish to save the temp csv file
+                directory: The location that wish to save the temp csv file
         Returns:
-            An IOTextWrapper object
+                An IOTextWrapper object
         Raises:
-            CSVfileNameError: when the directory and self.save_name fail to
-            form a legal directory location
+                CSVfileNameError: when the directory and self.save_name fail to
+                form a legal directory location
 
         TODO: It may not be a good practice, which is to say, create a IO
         object and left it unclosed by just returning it. So change it in
@@ -114,6 +114,7 @@ class BaseCrawler(object):
         '''
         Class method that determines whether an url is legal.
         Return True by default, need add condition in subclass.
+        
         TODO: to be implemented using regex
         '''
         return True

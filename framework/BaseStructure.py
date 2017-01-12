@@ -29,10 +29,16 @@ class BaseStructure(object):
         Returns:
             a human readable list of data fields from the web page
         '''
-        if not self.fields:
-            raise NotImplementedError("To be implemented in subclass.")
-        else:
-            return self.fields
+        return dir(self)
+
+    def __str__(self):
+        '''
+        str method of the structure.
+
+        Returns same content as __repr__ yet called by print()
+        '''
+        return str(dir(self))
+
 
     def set_fields(self):
         '''

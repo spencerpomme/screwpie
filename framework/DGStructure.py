@@ -7,7 +7,7 @@ group web page.
 
 from BaseStructure import BaseStructure
 from bs4 import BeautifulSoup
-from types import MethodType
+from types import FunctionType
 
 
 class DGStructure(BaseStructure):
@@ -32,8 +32,10 @@ class DGStructure(BaseStructure):
         This initialization method overrides the method from supper class.
 
         Arguments:
-                data_row: A bs4.element.Tag object that contains a row
-                of douban group posts.
+                data_row   : A bs4.element.Tag object that contains a row
+                             of douban group posts. It is one element of the
+                             list which is casted from a returned object of 
+                             findAll function.
         Attributes:
                 title      : title of the post in the table
                 title_url  : url links to the post page
@@ -42,10 +44,10 @@ class DGStructure(BaseStructure):
                 follow_num : reply number of the post
                 time       : last reply time of the post
         '''
-        self.title = data_row.find('td', {'class': 'title'}.a.attrs['title'])
+        self.title = data_row.find('td', {'class': 'title'}).a.attrs['title']
         self.title_url = data_row.find(
             "td", {"class": "title"}).a.attrs["href"]
-        self.author = data_row.find("td", {"nowrap": "nowrap"}).a
+        self.author = data_row.find("td", {"nowrap": "nowrap"}).a.text
         self.author_url = data_row.find(
             "td", {"nowrap": "nowrap"}).a.attrs["href"]
         self.follow_num = data_row.find(lambda tag: len(
@@ -59,7 +61,34 @@ class DGStructure(BaseStructure):
         '''
         This method return a list of all Attributes aquired from douban group.
         '''
-        attrs = [i for i in dir(self) if not i.startswith('__')
-                 and not isinstance(i, MethodType)]
-        assert len(attrs) == 6
-        return attrs
+        fields = [self.title, self.title_url, self.author, self.author_url,
+                 self.follow_num, self.time]
+
+        for field in fields:
+            assert not isinstance(field, FunctionType)
+        return fields
+
+
+'''
+Temporary test code:
+[date: 2017.1.12][status: working]
+'''
+if __name__ == "__main__":
+
+    from bs4 import BeautifulSoup
+    import requests
+
+    url = 'https://www.douban.com/group/gz020/discussion?start=0'
+    res = requests.get(url)
+    soup = BeautifulSoup(res.text, 'lxml')
+    table = soup.findAll('table', {'class': 'olt'})
+    rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
+    row = rows[0]
+    print('row:\n', '-'*10, '\n', row, end='\n\n')
+    print('-'*10)
+    zf = DGStructure(row)
+    for ele in zf.get_row_data():
+        print('-->', ele)
+
+
+
