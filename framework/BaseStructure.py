@@ -4,6 +4,7 @@ This is a web crawler framework that help collecting ZHIHU & Douban data.
 BaseStructure is an base class that to be customized for specific websites.
 '''
 
+
 class BaseStructure(object):
     '''
     This class creates basic html page structure analysis object.
@@ -39,11 +40,9 @@ class BaseStructure(object):
         '''
         return str(dir(self))
 
-
     def set_fields(self):
         '''
         Set field rules to scape data from page using bs4.
         To be defined in subclass.
         '''
         raise NotImplementedError("Define scaping rule for specific websites.")
-        

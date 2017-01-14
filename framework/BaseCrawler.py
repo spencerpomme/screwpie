@@ -4,6 +4,7 @@ This is a web crawler framework that help collecting ZHIHU & Douban data.
 
 import os
 
+
 class CSVfileNameError(Exception):
 
     def __str__(self):
@@ -102,7 +103,7 @@ class BaseCrawler(object):
         '''
         Class method that determines whether an url is legal.
         Return True by default, need add condition in subclass.
-        
+
         TODO: to be implemented using regex
         '''
         return True
