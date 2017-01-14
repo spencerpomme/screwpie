@@ -55,13 +55,14 @@ class DGCrawler(BaseCrawler):
 
     def set_total_page(self):
         '''
-        Instance method gets total pages to be scaped in one mission.
+        Instance method gets total pages to be scaped.
+        Usually only need to be called once at the beginning per run.
         '''
         res = requests.get(self.base_url, headers=self.headers)
-        psoup = BeautifulSoup(res.text, 'lxml')
+        soup = BeautifulSoup(res.text, 'lxml')
         # the line below need to be validated. The needed message is in html tag
         # attribute value, the problem is how to extract it properly.
-        paginator_list = psoup.select('div[class="paginator"] > span')
+        paginator_list = soup.select('div[class="paginator"] > span')
         if paginator_list:
             self.total_page = int(paginator_list[1]['data-total-page'])
         else:
@@ -71,9 +72,20 @@ class DGCrawler(BaseCrawler):
         '''
         Instance method that returns group_name field.
         '''
-        pass
+        if self.group_name:
+            return self.group_name
+        else:
+            raise Exception('Group name yet set.')
 
-
+    def set_group_name(self):
+        '''
+        Instance method gets group name of the group.
+        Usually only need to be called once at the beginning per run.
+        '''
+        res = requests.get(self.base_url, headers=self.headers)
+        soup = BeautifulSoup(res.text, 'lxml')
+        sidebar_soup = soup.select('div[class="side-reg"]')[0]
+        self.group_name = sidebar_soup.select('div[class="title"]')[0].a.text
 
 
 if __name__ == '__main__':
