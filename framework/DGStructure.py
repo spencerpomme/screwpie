@@ -62,7 +62,7 @@ class DGStructure(BaseStructure):
         This method return a list of all Attributes aquired from douban group.
         '''
         fields = [self.title, self.title_url, self.author, self.author_url,
-                 self.follow_num, self.time]
+                  self.follow_num, self.time]
 
         for field in fields:
             assert not isinstance(field, FunctionType)
@@ -85,10 +85,8 @@ if __name__ == "__main__":
     table = soup.findAll('table', {'class': 'olt'})
     rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
     row = rows[0]
-    print('row:\n', '-'*10, '\n', row, end='\n\n')
-    print('-'*10)
+    print('row:\n', '-' * 10, '\n', row, end='\n\n')
+    print('-' * 10)
     zf = DGStructure(row)
     for ele in zf.get_row_data():
         print('-->', ele)
-
-
