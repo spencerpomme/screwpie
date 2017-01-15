@@ -66,7 +66,7 @@ class BaseCrawler(object):
 
     def set_total_page(self):
         '''
-        Gets total pages to be scaped in one mission.
+        Gets total pages to be scaped in one group.
 
         Specific page structure rule needs to be defined in subclass, here
         provides test features.

@@ -7,6 +7,7 @@ This class extends the BaseCrawler class and adds website specific functions.
 from BaseCrawler import *
 from DGStructure import DGStructure
 from bs4 import BeautifulSoup
+import requests
 
 
 class DGCrawler(BaseCrawler):
@@ -15,14 +16,14 @@ class DGCrawler(BaseCrawler):
 
     '''
 
-    def __init__(self, base_url, save_name, total_page):
+    def __init__(self, base_url, save_name, page):
         '''
         Douban group constructor.
         Attributes:
             base_url   : The page where crawler starts crawling
             save_name  : The temp save csv file name to hold collected data
-            total_page : total pages of the group post
-            group_name : name of scrapping group
+            save_page  : How many pages do you want to get
+            group_name : Name of scrapping group
         '''
         BaseCrawler.__init__(self, base_url, save_name)
         self.total_page = None
@@ -89,7 +90,12 @@ class DGCrawler(BaseCrawler):
 
 
 if __name__ == '__main__':
-    print(dir(BaseCrawler), end='\n\n')
-    print(dir(DGCrawler))
-    url = 'https://www.douban.com/group/gz020/discussion?start=0'
-    test = DGCrawler()
+    # print(dir(BaseCrawler), end='\n\n')
+    # print(dir(DGCrawler))
+    url = 'https://www.douban.com/group/18297/discussion?start=0'
+    test = DGCrawler(url, "test.csv", 1)
+    test.set_group_name()
+    print(type(test.get_group_name()))
+    print(test.get_group_name().encode('utf8'))
+    test.set_total_page()
+    print(test.get_total_page())
