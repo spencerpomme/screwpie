@@ -96,6 +96,9 @@ if __name__ == '__main__':
     test = DGCrawler(url, "test.csv", 1)
     test.set_group_name()
     print(type(test.get_group_name()))
-    print(test.get_group_name().encode('utf8'))
+    try:
+        print(test.get_group_name())
+    except:
+        print(test.get_group_name().encode('utf8'))
     test.set_total_page()
     print(test.get_total_page())
