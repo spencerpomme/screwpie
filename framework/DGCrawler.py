@@ -88,6 +88,8 @@ class DGCrawler(BaseCrawler):
         sidebar_soup = soup.select('div[class="side-reg"]')[0]
         self.group_name = sidebar_soup.select('div[class="title"]')[0].a.text
 
+    def has_author(self, author: str, field):
+        pass
 
 if __name__ == '__main__':
     # print(dir(BaseCrawler), end='\n\n')
