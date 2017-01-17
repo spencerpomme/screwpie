@@ -28,7 +28,8 @@ class DGCrawler(BaseCrawler):
         BaseCrawler.__init__(self, base_url, save_name)
         self.total_page = None
         self.group_name = None
-        self.headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:43.0) "
+        self.headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0;"
+                        "WOW64; rv:43.0) "
                         "Gecko/20100101 Firefox/43.0",
                         "Connection": "keep-alive"
                         }
@@ -61,7 +62,7 @@ class DGCrawler(BaseCrawler):
         '''
         res = requests.get(self.base_url, headers=self.headers)
         soup = BeautifulSoup(res.text, 'lxml')
-        # the line below need to be validated. The needed message is in html tag
+        # the line below need to be validated. Needed message is in html tag
         # attribute value, the problem is how to extract it properly.
         paginator_list = soup.select('div[class="paginator"] > span')
         if paginator_list:
