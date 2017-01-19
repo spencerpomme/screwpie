@@ -73,5 +73,3 @@ class SaveToCSV(object):
         '''
         writer = csv.writer(self.csv_file)
         writer.writerow(data_row)
-
-
