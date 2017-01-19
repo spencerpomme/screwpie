@@ -89,3 +89,6 @@ class BaseCrawler(object):
         if result is None:
             return False
         return True
+
+
+

@@ -43,3 +43,7 @@ class BaseStructure(object):
         To be defined in subclass.
         '''
         raise NotImplementedError("Define scaping rule for specific websites.")
+
+
+
+

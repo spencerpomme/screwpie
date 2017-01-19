@@ -6,6 +6,7 @@ This class extends the BaseCrawler class and adds website specific functions.
 
 from BaseCrawler import *
 from DGStructure import DGStructure
+from Pipeline import SaveToCSV
 from bs4 import BeautifulSoup
 import requests
 
@@ -107,6 +108,11 @@ class DGCrawler(BaseCrawler):
     def has_author(self, author: str, field):
         pass
 
+
+'''
+Temporary test code:
+[date: 2017.1.19][status: working]
+'''
 if __name__ == '__main__':
     # print(dir(BaseCrawler), end='\n\n')
     # print(dir(DGCrawler))

@@ -73,3 +73,17 @@ class SaveToCSV(object):
         '''
         writer = csv.writer(self.csv_file)
         writer.writerow(data_row)
+
+'''
+Temporary test code:
+[date: 2017.1.19][status: working]
+'''
+if __name__ == '__main__':
+
+    data_row = ['【出租-广州东站/林和西】四房两厅一卫+1250中房+限女生',
+                'https://www.douban.com/group/topic/91643430/',
+                '酱油君',
+                'https://www.douban.com/people/60276335/',
+                '60',
+                '01-19 20:48']
+    

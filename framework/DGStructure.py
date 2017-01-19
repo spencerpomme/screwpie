@@ -73,7 +73,7 @@ class DGStructure(BaseStructure):
 
 '''
 Temporary test code:
-[date: 2017.1.12][status: working]
+[date: 2017.1.19][status: working]
 '''
 if __name__ == "__main__":
 
@@ -87,8 +87,13 @@ if __name__ == "__main__":
     table = soup.findAll('table', {'class': 'olt'})
     rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
     row = rows[0]
+
     print('row:\n', '-' * 10, '\n', row, end='\n\n')
     print('-' * 10)
+    
     zf = DGStructure(row)
     for ele in zf.get_row_data():
         print('-->', ele)
+
+    print(zf.get_row_data())
+    print(len(zf.get_row_data()))
