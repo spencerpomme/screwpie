@@ -82,7 +82,7 @@ def getGroupName(soup: BeautifulSoup)->str:
     return groupname
 
 
-def startOperation(init_url: str, pages: int=None, filename: str='TESTCSV')->list:
+def startOperation(init_url: str, pages: int=None, filename='TESTCSV')->list:
     '''
     type init_url: str
     rtype: list

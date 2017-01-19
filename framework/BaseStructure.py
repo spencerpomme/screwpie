@@ -1,5 +1,6 @@
 '''
-This is a web crawler framework that help collecting ZHIHU & Douban data.
+This module is a component of web crawler framework that help collecting 
+ZHIHU & Douban data.
 
 BaseStructure is an base class that to be customized for specific websites.
 '''
@@ -11,10 +12,6 @@ class BaseStructure(object):
 
     This base class has the following basic functionalities:
         + Sets a list of data fields concerned in a certain webpage
-
-    Attributes:
-            fields: The page where crawler starts crawling
-
     '''
 
     def __init__(self):

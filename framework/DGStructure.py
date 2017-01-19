@@ -1,5 +1,6 @@
 '''
-This is a web crawler framework that help collecting ZHIHU & Douban data.
+This module is a component of web crawler framework that help collecting 
+ZHIHU & Douban data.
 
 DGStructure extends BaseStructure class to extract needed information in douban
 group web page.

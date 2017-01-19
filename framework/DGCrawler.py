@@ -46,6 +46,21 @@ class DGCrawler(BaseCrawler):
                                       self.total_page, self.group_name)
         return info
 
+    def parse_data(self, current_page)->list:
+        '''
+        This method uses imported DGStructure class to get fields list of 
+        current page.
+        Attributes:
+                current_page: 
+        '''
+        res = requests.get(current_page)
+        soup = BeautifulSoup(res.text, 'lxml')
+        table = soup.findAll('table', {'class': 'olt'})
+        rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
+        for row in rows:
+            data_row = DGStructure(row)
+        
+
     def get_total_page(self):
         '''
         Instance method returns total_page field.

@@ -1,9 +1,7 @@
 '''
-This is a web crawler framework that help collecting ZHIHU & Douban data.
+This module is a component of web crawler framework that help collecting 
+ZHIHU & Douban data.
 '''
-
-import os
-
 
 class CSVfileNameError(Exception):
 
@@ -29,12 +27,10 @@ class BaseCrawler(object):
 
     This base class has the following basic functionalities:
         + Set base url to start crawling
-        + Set a csv file name to save the temp data
         + Gets total web pages to be scaped
 
     Attributes:
             base_url   : The page where crawler starts crawling
-            save_name  : The temp save csv file name to hold collected data
             total_page : total pages of the group post
     '''
 
@@ -72,32 +68,6 @@ class BaseCrawler(object):
         provides test features.
         '''
         raise NotImplementedError("Need to define get_total_page().")
-
-    def create_tempfile(self, directory=None):
-        '''
-        Instance method that returns a pointer of a new temp file location.
-        By default the saving location is current working directory.
-
-        Args:
-                directory: The location that wish to save the temp csv file
-        Returns:
-                An IOTextWrapper object
-        Raises:
-                CSVfileNameError: when the directory and self.save_name fail to
-                form a legal directory location
-
-        TODO: It may not be a good practice, which is to say, create a IO
-        object and left it unclosed by just returning it. So change it in
-        the future shall any problem occurs.
-        '''
-        if not directory:
-            location = os.getcwd()
-        try:
-            temp_csv = open(r'%s/%s' % (directory, self.save_name))
-        except Exception as e:
-            print(e)
-            os.remove(r'%s/%s' % (directory, self.save_name))
-        return temp_csv
 
     def _is_legal_url(url: str)->bool:
         '''
