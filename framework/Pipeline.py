@@ -8,17 +8,19 @@ Pipeline manages different data storing strategies of the crawler.
 import os
 import csv
 
+
 class SaveToCSV(object):
     '''
     This class defines data storing strategies for the crawler.
     '''
 
-    def __init__(self, name, location=None):
+    def __init__(self, name: str, location=None):
         '''
         Initialize file/database name.
         Arguments:
                 name: csv file name. This name is garuanteed to be legal since
-                      it was tested by BaseCrawler._is_legal_file_name method.
+                      it was tested by BaseCrawler._is_legal_file_name method,
+                      so there's no need to test name validity in this class.
         '''
         self.name = name
         if not location:
@@ -31,8 +33,8 @@ class SaveToCSV(object):
         '''
         Representation format of this object.
         '''
-        return 'Pipeline Object:'
-               '[csv file: %s] at "%s"' % (self.name, self.location)
+        return ('Pipeline Object:'
+                '[csv file: %s] at %s') % (self.name, self.location)
 
     def create_file(self):
         '''
@@ -50,7 +52,8 @@ class SaveToCSV(object):
         the future shall any problem occurs.
         '''
         try:
-            file_ptr = open(r'%s/%s' % (self.location, self.name))
+            file_ptr = open(r'%s/%s' % (self.location, self.name),
+                            'w', newline='', encoding='utf8')
         except Exception as e:
             print(e)
             os.remove(r'%s/%s' % (self.location, self.name))
@@ -86,4 +89,9 @@ if __name__ == '__main__':
                 'https://www.douban.com/people/60276335/',
                 '60',
                 '01-19 20:48']
-    
+
+    pipe = SaveToCSV('test.csv')
+    print(pipe)
+    pipe.write_data(data_row)
+    pipe.close_file()
+
