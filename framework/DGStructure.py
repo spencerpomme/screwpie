@@ -58,7 +58,7 @@ class DGStructure(BaseStructure):
         if self.follow_num == "":
             self.follow_num = "0"
 
-    def get_row_data(self)->list:
+    def get_line_data(self)->list:
         '''
         This method return a list of all Attributes aquired from douban group.
         '''
@@ -69,7 +69,6 @@ class DGStructure(BaseStructure):
             assert not isinstance(field, FunctionType)
             assert field is not None
         return fields
-
 
 '''
 Temporary test code:
@@ -92,8 +91,9 @@ if __name__ == "__main__":
     print('-' * 10)
     
     zf = DGStructure(row)
-    for ele in zf.get_row_data():
+    for ele in zf.get_line_data():
         print('-->', ele)
 
-    print(zf.get_row_data())
-    print(len(zf.get_row_data()))
+    print(zf.get_line_data())
+    print(len(zf.get_line_data()))
+    

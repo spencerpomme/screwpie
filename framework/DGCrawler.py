@@ -34,6 +34,7 @@ class DGCrawler(BaseCrawler):
                         "Gecko/20100101 Firefox/43.0",
                         "Connection": "keep-alive"
                         }
+        self.targets = []
 
     def __repr__(self):
         '''
@@ -47,7 +48,7 @@ class DGCrawler(BaseCrawler):
                                       self.total_page, self.group_name)
         return info
 
-    def parse_data(self, current_page)->list:
+    def parse_page(self, current_page)->list:
         '''
         This method uses imported DGStructure class to get fields list of 
         current page.
@@ -60,8 +61,14 @@ class DGCrawler(BaseCrawler):
         rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
         for row in rows:
             data_row = DGStructure(row)
-        
+            yield data_row.get_line_data()
 
+    def start(self):
+        '''
+        The main function of the crawler.
+        '''
+        pass
+        
     def get_total_page(self):
         '''
         Instance method returns total_page field.
@@ -97,7 +104,7 @@ class DGCrawler(BaseCrawler):
 
     def set_group_name(self):
         '''
-        Instance method gets group name of the group.
+        Instance method that gets group name of the group.
         Usually only need to be called once at the beginning per run.
         '''
         res = requests.get(self.base_url, headers=self.headers)
@@ -105,9 +112,40 @@ class DGCrawler(BaseCrawler):
         sidebar_soup = soup.select('div[class="side-reg"]')[0]
         self.group_name = sidebar_soup.select('div[class="title"]')[0].a.text
 
-    def has_author(self, author: str, field):
-        pass
+    def set_targets(self, targets: list):
+        '''
+        Instance method that sets target authors.
+        Attributes:
+                targets: a list of str names
+        Returns:
+                An SaveToCSV object
+        '''
+        if targets:
+            self.targets = targets
+            return SaveToCSV('target_histroy.csv')
 
+    def _has_targets(line)->bool:
+        '''
+        Class method
+
+        Costumized functionality for douban group. To detect whether an author
+        is in current group.
+
+        Attributes:
+                line: current line of post in the group
+        '''
+        if not self.targets:
+            raise Exception('Need to set targets first!')
+        if line:
+            try:
+                if line[2] in self.targets:
+                    return True
+                else:
+                    return False
+            except Exception as e:
+                print(e)
+                print(line)
+                raise e
 
 '''
 Temporary test code:
