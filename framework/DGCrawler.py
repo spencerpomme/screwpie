@@ -9,6 +9,7 @@ from DGStructure import DGStructure
 from Pipeline import SaveToCSV
 from bs4 import BeautifulSoup
 import requests
+import time
 
 
 class DGCrawler(BaseCrawler):
@@ -16,16 +17,23 @@ class DGCrawler(BaseCrawler):
     This class is a specific crawler for douban group.
 
     '''
+    post_per_page = 25 # There are 25 posts per group page in douban group
 
-    def __init__(self, base_url, save_name, page):
+    def __init__(self, base_url, save_name=None):
         '''
         Douban group constructor.
         Attributes:
             base_url   : The page where crawler starts crawling
             save_name  : The temp save csv file name to hold collected data
-            save_page  : How many pages do you want to get
             group_name : Name of scrapping group
         '''
+        if not save_name:
+            self.set_group_name()
+            save_name = self.get_group_name() + '.csv'
+
+        if not BaseCrawler._is_legal_file_name(save_name):
+            raise CSVfileNameError
+
         BaseCrawler.__init__(self, base_url, save_name)
         self.total_page = None
         self.group_name = None
@@ -48,12 +56,14 @@ class DGCrawler(BaseCrawler):
                                       self.total_page, self.group_name)
         return info
 
-    def parse_page(self, current_page)->list:
+    def parse_page(self, current_page):
         '''
         This method uses imported DGStructure class to get fields list of 
         current page.
         Attributes:
-                current_page: 
+                current_page: url
+        Yields:
+                a list, one line data of the group topics
         '''
         res = requests.get(current_page)
         soup = BeautifulSoup(res.text, 'lxml')
@@ -63,11 +73,24 @@ class DGCrawler(BaseCrawler):
             data_row = DGStructure(row)
             yield data_row.get_line_data()
 
-    def start(self):
+    def start(self, pages=None):
         '''
         The main function of the crawler.
+        Attributes:
+                pages: number of pages to be downloaded
         '''
-        pass
+        if not pages:
+            self.set_total_page()
+            pages = self.get_total_page()
+        
+        save_file = SaveToCSV(self.save_name)
+        for page in range(pages):
+            current_url = self.base_url + str(self.post_per_page * page)
+            time.sleep(1)
+            for line in self.parse_page(current_url):
+                save_file.write_data(line)
+        save_file.close_file()
+
         
     def get_total_page(self):
         '''
@@ -83,7 +106,7 @@ class DGCrawler(BaseCrawler):
         Instance method gets total pages to be scaped.
         Usually only need to be called once at the beginning per run.
         '''
-        res = requests.get(self.base_url, headers=self.headers)
+        res = requests.get(self.base_url + '0', headers=self.headers)
         soup = BeautifulSoup(res.text, 'lxml')
         # the line below need to be validated. Needed message is in html tag
         # attribute value, the problem is how to extract it properly.
@@ -107,7 +130,7 @@ class DGCrawler(BaseCrawler):
         Instance method that gets group name of the group.
         Usually only need to be called once at the beginning per run.
         '''
-        res = requests.get(self.base_url, headers=self.headers)
+        res = requests.get(self.base_url + '0', headers=self.headers)
         soup = BeautifulSoup(res.text, 'lxml')
         sidebar_soup = soup.select('div[class="side-reg"]')[0]
         self.group_name = sidebar_soup.select('div[class="title"]')[0].a.text
@@ -154,13 +177,6 @@ Temporary test code:
 if __name__ == '__main__':
     # print(dir(BaseCrawler), end='\n\n')
     # print(dir(DGCrawler))
-    url = 'https://www.douban.com/group/18297/discussion?start=0'
-    test = DGCrawler(url, "test.csv", 1)
-    test.set_group_name()
-    print(type(test.get_group_name()))
-    try:
-        print(test.get_group_name())
-    except:
-        print(test.get_group_name().encode('utf8'))
-    test.set_total_page()
-    print(test.get_total_page())
+    base_url = 'https://www.douban.com/group/GuangZhoulove/discussion?start='
+    test = DGCrawler(base_url, "test.csv")
+    test.start(5)

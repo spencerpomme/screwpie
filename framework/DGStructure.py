@@ -79,9 +79,8 @@ if __name__ == "__main__":
     from bs4 import BeautifulSoup
     import requests
 
-    base_url = 'https://www.douban.com/group/'
-    group_url = 'gz020/discussion?start='
-    res = requests.get(base_url + group_url + '0')
+    base_url = 'https://www.douban.com/group/gz020/discussion?start='
+    res = requests.get(base_url + '0')
     soup = BeautifulSoup(res.text, 'lxml')
     table = soup.findAll('table', {'class': 'olt'})
     rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
@@ -96,4 +95,3 @@ if __name__ == "__main__":
 
     print(zf.get_line_data())
     print(len(zf.get_line_data()))
-    

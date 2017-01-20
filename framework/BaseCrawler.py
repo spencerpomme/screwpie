@@ -3,6 +3,8 @@ This module is a component of web crawler framework that help collecting
 ZHIHU & Douban data.
 '''
 
+import re
+
 class CSVfileNameError(Exception):
 
     def __str__(self):
@@ -40,7 +42,6 @@ class BaseCrawler(object):
         '''
         self.base_url = base_url
         self.save_name = save_name
-        self.total_page = None
 
     def set_base_url(self, url: str):
         '''
