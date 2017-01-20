@@ -42,7 +42,7 @@ class DGCrawler(BaseCrawler):
                         "Gecko/20100101 Firefox/43.0",
                         "Connection": "keep-alive"
                         }
-        self.targets = []
+        self.targets = ()
 
     def __repr__(self):
         '''
@@ -73,22 +73,31 @@ class DGCrawler(BaseCrawler):
             data_row = DGStructure(row)
             yield data_row.get_line_data()
 
-    def start(self, pages=None):
+    def run(self, pages=None, target=None):
         '''
         The main function of the crawler.
-        Attributes:
-                pages: number of pages to be downloaded
+        Arguments:
+                pages : Number of pages to be downloaded, default to None;
+                target: Note down target author while running through required
+                        number of pages if applicable, default to None.
+                        Is a tuple of str. 
         '''
         if not pages:
             self.set_total_page()
             pages = self.get_total_page()
 
         save_file = SaveToCSV(self.save_name)
+        if target is not None and isinstance(target, tuple):
+            target_file = self.set_targets(target)
+
         for page in range(pages):
             current_url = self.base_url + str(self.post_per_page * page)
             time.sleep(1)
             for line in self.parse_page(current_url):
                 save_file.write_data(line)
+                if self.targets and DGCrawler._has_targets(line):
+                    target_file.write_data(line)
+
         save_file.close_file()
 
     def get_total_page(self):
@@ -134,11 +143,11 @@ class DGCrawler(BaseCrawler):
         sidebar_soup = soup.select('div[class="side-reg"]')[0]
         self.group_name = sidebar_soup.select('div[class="title"]')[0].a.text
 
-    def set_targets(self, targets: list):
+    def set_targets(self, targets: tuple):
         '''
         Instance method that sets target authors.
         Attributes:
-                targets: a list of str names
+                targets: a tuple of str names
         Returns:
                 An SaveToCSV object
         '''
@@ -171,11 +180,10 @@ class DGCrawler(BaseCrawler):
 
 '''
 Temporary test code:
-[date: 2017.1.19][status: working]
+[date: 2017.1.20][status: working]
 '''
 if __name__ == '__main__':
-    # print(dir(BaseCrawler), end='\n\n')
-    # print(dir(DGCrawler))
+    
     base_url = 'https://www.douban.com/group/GuangZhoulove/discussion?start='
     test = DGCrawler(base_url, "test.csv")
-    test.start(5)
+    test.run(5)
