@@ -21,5 +21,7 @@ This project is a toy project of web crawler specifically targeted on douban gro
 
 6.  Add a front-end to visualize data scraped using [D3.js](https://d3js.org) (or other library)
 
+7. Decoupling the orginal one file into classes.(done)
+
 
 
