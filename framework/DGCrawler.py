@@ -17,7 +17,7 @@ class DGCrawler(BaseCrawler):
     This class is a specific crawler for douban group.
 
     '''
-    post_per_page = 25 # There are 25 posts per group page in douban group
+    post_per_page = 25  # There are 25 posts per group page in douban group
 
     def __init__(self, base_url, save_name=None):
         '''
@@ -82,7 +82,7 @@ class DGCrawler(BaseCrawler):
         if not pages:
             self.set_total_page()
             pages = self.get_total_page()
-        
+
         save_file = SaveToCSV(self.save_name)
         for page in range(pages):
             current_url = self.base_url + str(self.post_per_page * page)
@@ -91,7 +91,6 @@ class DGCrawler(BaseCrawler):
                 save_file.write_data(line)
         save_file.close_file()
 
-        
     def get_total_page(self):
         '''
         Instance method returns total_page field.

@@ -94,4 +94,3 @@ if __name__ == '__main__':
     print(pipe)
     pipe.write_data(data_row)
     pipe.close_file()
-
