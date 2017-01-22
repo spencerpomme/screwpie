@@ -91,7 +91,7 @@ class DGCrawler(BaseCrawler):
             target_file = self.set_targets(target)
 
         for page in range(pages):
-            current_url = self.base_url + str(self.post_per_page * page)
+            current_url = self.base_url + str(DGCrawler.post_per_page * page)
             time.sleep(1)
             for line in self.parse_page(current_url):
                 save_file.write_data(line)
@@ -145,13 +145,18 @@ class DGCrawler(BaseCrawler):
 
     def set_targets(self, targets: tuple):
         '''
-        Instance method that sets target authors.
+        Instance method that sets target authors. Garuantees the targets tuple
+        contains valid target string.
+
         Attributes:
                 targets: a tuple of str names
         Returns:
                 An SaveToCSV object
         '''
         if targets:
+            for target in targets:
+                if not isinstance(target, str):
+                    raise InvalidTargets
             self.targets = targets
             return SaveToCSV('target_histroy.csv')
 
@@ -183,7 +188,7 @@ Temporary test code:
 [date: 2017.1.20][status: working]
 '''
 if __name__ == '__main__':
-    
+
     base_url = 'https://www.douban.com/group/GuangZhoulove/discussion?start='
     test = DGCrawler(base_url, "test.csv")
     test.run(5)

@@ -5,13 +5,14 @@ ZHIHU & Douban data.
 
 import re
 
+
 class CSVfileNameError(Exception):
 
     def __str__(self):
         return 'Invalid file name, please add .csv at the end of name.'
 
 
-class WrongURL(Exception):
+class InvalidURL(Exception):
 
     def __str__(self):
         return 'Invalid url input, input should be valid url of douban group.'
@@ -21,6 +22,12 @@ class NoPageNumber(Exception):
 
     def __str__(self):
         return 'Failed to get total group topic page numbers.'
+
+
+class InvalidTargets(Exception):
+
+    def __str__(self):
+        return 'Target name in targets tuple must of type string'
 
 
 class BaseCrawler(object):
@@ -90,6 +97,3 @@ class BaseCrawler(object):
         if result is None:
             return False
         return True
-
-
-
