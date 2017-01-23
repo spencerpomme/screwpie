@@ -56,23 +56,6 @@ class DGCrawler(BaseCrawler):
                                       self.total_page, self.group_name)
         return info
 
-    def parse_page(self, current_page):
-        '''
-        This method uses imported DGStructure class to get fields list of 
-        current page.
-        Attributes:
-                current_page: url
-        Yields:
-                a list, one line data of the group topics
-        '''
-        res = requests.get(current_page)
-        soup = BeautifulSoup(res.text, 'lxml')
-        table = soup.findAll('table', {'class': 'olt'})
-        rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
-        for row in rows:
-            data_row = DGStructure(row)
-            yield data_row.get_line_data()
-
     def run(self, pages=None, target=None):
         '''
         The main function of the crawler.
@@ -99,6 +82,23 @@ class DGCrawler(BaseCrawler):
                     target_file.write_data(line)
 
         save_file.close_file()
+
+    def parse_page(self, current_page):
+        '''
+        This method uses imported DGStructure class to get fields list of 
+        current page.
+        Attributes:
+                current_page: url
+        Yields:
+                a list, one line data of the group topics
+        '''
+        res = requests.get(current_page)
+        soup = BeautifulSoup(res.text, 'lxml')
+        table = soup.findAll('table', {'class': 'olt'})
+        rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
+        for row in rows:
+            data_row = DGStructure(row)
+            yield data_row.get_line_data()
 
     def get_total_page(self):
         '''
