@@ -90,7 +90,6 @@ class DGCrawler(BaseCrawler):
                 continue
             bar.update(page+1)
             
-
         save_file.close_file()
 
     def parse_page(self, current_page: str):
