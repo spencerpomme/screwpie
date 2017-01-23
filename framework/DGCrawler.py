@@ -8,6 +8,7 @@ from BaseCrawler import *
 from DGStructure import DGStructure
 from Pipeline import SaveToCSV
 from bs4 import BeautifulSoup
+from progressbar import ProgressBar
 import requests
 import time
 
@@ -27,13 +28,6 @@ class DGCrawler(BaseCrawler):
             save_name  : The temp save csv file name to hold collected data
             group_name : Name of scrapping group
         '''
-        if not save_name:
-            self.set_group_name()
-            save_name = self.get_group_name() + '.csv'
-
-        if not BaseCrawler._is_legal_file_name(save_name):
-            raise CSVfileNameError
-
         BaseCrawler.__init__(self, base_url, save_name)
         self.total_page = None
         self.group_name = None
@@ -43,6 +37,12 @@ class DGCrawler(BaseCrawler):
                         "Connection": "keep-alive"
                         }
         self.targets = ()
+        if not save_name:
+            self.set_group_name()
+            save_name = self.get_group_name() + '.csv'
+
+        if not BaseCrawler._is_legal_file_name(save_name):
+            raise CSVfileNameError
 
     def __repr__(self):
         '''
@@ -72,18 +72,28 @@ class DGCrawler(BaseCrawler):
         save_file = SaveToCSV(self.save_name)
         if target is not None and isinstance(target, tuple):
             target_file = self.set_targets(target)
-
+        bar = ProgressBar(max_value=pages, redirect_stdout=True)
         for page in range(pages):
+            print("Crawling page %d ..." % (page + 1))
             current_url = self.base_url + str(DGCrawler.post_per_page * page)
-            time.sleep(1)
-            for line in self.parse_page(current_url):
-                save_file.write_data(line)
-                if self.targets and DGCrawler._has_targets(line):
-                    target_file.write_data(line)
+            time.sleep(0.5)
+            try:
+                for line in self.parse_page(current_url):
+                    save_file.write_data(line)
+                    if self.targets and DGCrawler._has_targets(line):
+                        target_file.write_data(line)
+            except Exception as e:
+                print('There is a problem:', e)
+                print('Waiting 10 seconds to recover...')
+                time.sleep(10)
+                page -= 1
+                continue
+            bar.update(page+1)
+            
 
         save_file.close_file()
 
-    def parse_page(self, current_page):
+    def parse_page(self, current_page: str):
         '''
         This method uses imported DGStructure class to get fields list of 
         current page.
@@ -96,6 +106,9 @@ class DGCrawler(BaseCrawler):
         soup = BeautifulSoup(res.text, 'lxml')
         table = soup.findAll('table', {'class': 'olt'})
         rows = list(table)[0].findAll("tr", {"class": "", "id": ""})
+        if not len(rows):
+            print("Empty page or something wrong on %s" % current_page)
+            return None
         for row in rows:
             data_row = DGStructure(row)
             yield data_row.get_line_data()
@@ -190,5 +203,5 @@ Temporary test code:
 if __name__ == '__main__':
 
     base_url = 'https://www.douban.com/group/GuangZhoulove/discussion?start='
-    test = DGCrawler(base_url, "test.csv")
-    test.run(5)
+    test = DGCrawler(base_url)
+    test.run()
