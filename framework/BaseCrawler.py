@@ -49,6 +49,19 @@ class BaseCrawler(object):
         '''
         self.base_url = base_url
         self.save_name = save_name
+        self.proxies = {'http': 'http://218.64.163.18:8998',
+                        'http': 'http://121.232.147.155:9000',
+                        'http': 'http://117.90.2.131:9000',
+                        'http': 'http://58.52.201.119:8080',
+                        'http': 'http://117.90.0.203:9000',
+                        'http': 'http://101.4.136.34:8080'
+                        }
+
+        self.headers = {"User-Agent": "Mozilla/5.0 (Macintosh; U;"
+                        " Intel Mac OS X 10_6_8; en-us) AppleWebKit/534.50 "
+                        "(KHTML, like Gecko) Version/5.1 Safari/534.50",
+                        "Connection": "keep-alive"
+                        }
 
     def set_base_url(self, url: str):
         '''

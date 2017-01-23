@@ -31,15 +31,10 @@ class DGCrawler(BaseCrawler):
         BaseCrawler.__init__(self, base_url, save_name)
         self.total_page = None
         self.group_name = None
-        self.headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0;"
-                        "WOW64; rv:43.0) "
-                        "Gecko/20100101 Firefox/43.0",
-                        "Connection": "keep-alive"
-                        }
         self.targets = ()
-        if not save_name:
+        if save_name is None:
             self.set_group_name()
-            save_name = self.get_group_name() + '.csv'
+            self.save_name = self.get_group_name() + '.csv'
 
         if not BaseCrawler._is_legal_file_name(save_name):
             raise CSVfileNameError
@@ -76,7 +71,7 @@ class DGCrawler(BaseCrawler):
         for page in range(pages):
             print("Crawling page %d ..." % (page + 1))
             current_url = self.base_url + str(DGCrawler.post_per_page * page)
-            time.sleep(0.5)
+            time.sleep(1)
             try:
                 for line in self.parse_page(current_url):
                     save_file.write_data(line)
@@ -151,6 +146,7 @@ class DGCrawler(BaseCrawler):
         Usually only need to be called once at the beginning per run.
         '''
         res = requests.get(self.base_url + '0', headers=self.headers)
+        print(res.status_code)
         soup = BeautifulSoup(res.text, 'lxml')
         sidebar_soup = soup.select('div[class="side-reg"]')[0]
         self.group_name = sidebar_soup.select('div[class="title"]')[0].a.text
@@ -203,4 +199,4 @@ if __name__ == '__main__':
 
     base_url = 'https://www.douban.com/group/GuangZhoulove/discussion?start='
     test = DGCrawler(base_url)
-    test.run()
+    test.run(100)
