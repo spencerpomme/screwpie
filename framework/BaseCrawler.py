@@ -76,7 +76,7 @@ class BaseCrawler(object):
         '''
         Instance method that sets file name of temp csv file to hold data.
         '''
-        if _is_legal_file_name(name):
+        if BaseCrawler._is_legal_file_name(name):
             self.save_name = name
         else:
             raise CSVfileNameError
@@ -103,10 +103,12 @@ class BaseCrawler(object):
         '''
         Class method that determines whether an file name is legal.
         '''
+        if not name:
+            return False
         if name[-4:] != '.csv':
             return False
         legal_pattern = re.compile('(?<!\s)\w+.csv(?!\w+)')
         result = legal_pattern.match(name)
         if result is None:
-            return False
+            print('WARNING: There might be some pitfall in file name!')
         return True

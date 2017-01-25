@@ -34,9 +34,9 @@ class DGCrawler(BaseCrawler):
         self.targets = ()
         if save_name is None:
             self.set_group_name()
-            self.save_name = self.get_group_name() + '.csv'
+            self.set_save_name(self.get_group_name() + '.csv')
 
-        if not BaseCrawler._is_legal_file_name(save_name):
+        if not BaseCrawler._is_legal_file_name(self.save_name):
             raise CSVfileNameError
 
     def __repr__(self):
@@ -51,7 +51,7 @@ class DGCrawler(BaseCrawler):
                                       self.total_page, self.group_name)
         return info
 
-    def run(self, pages=None, target=None):
+    def run(self, pages=None, target=None, rate='medium'):
         '''
         The main function of the crawler.
         Arguments:
@@ -60,6 +60,7 @@ class DGCrawler(BaseCrawler):
                         number of pages if applicable, default to None.
                         Is a tuple of str. 
         '''
+        crawl_rate = {'low': 2, 'medium': 1, 'high': 0.5}
         if not pages:
             self.set_total_page()
             pages = self.get_total_page()
@@ -71,7 +72,7 @@ class DGCrawler(BaseCrawler):
         for page in range(pages):
             print("Crawling page %d ..." % (page + 1))
             current_url = self.base_url + str(DGCrawler.post_per_page * page)
-            time.sleep(1)
+            time.sleep(crawl_rate[rate])
             try:
                 for line in self.parse_page(current_url):
                     save_file.write_data(line)
@@ -197,6 +198,6 @@ Temporary test code:
 '''
 if __name__ == '__main__':
 
-    base_url = 'https://www.douban.com/group/GuangZhoulove/discussion?start='
+    base_url = 'https://www.douban.com/group/gz/discussion?start='
     test = DGCrawler(base_url)
-    test.run(100)
+    test.run(rate='low')
