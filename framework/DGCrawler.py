@@ -198,6 +198,6 @@ Temporary test code:
 '''
 if __name__ == '__main__':
 
-    base_url = 'https://www.douban.com/group/gz/discussion?start='
+    base_url = 'https://www.douban.com/group/zhuangb/discussion?start='
     test = DGCrawler(base_url)
-    test.run(rate='low')
+    test.run(pages=100, rate='low')
