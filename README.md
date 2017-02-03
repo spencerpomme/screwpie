@@ -1,7 +1,7 @@
 ## Project Screwpie
 
 
-This project is a toy project of web crawler specifically targeted on douban groups since it has no official provision of API. 
+This project is a toy project of web crawler specifically targeted on douban group and zhihu. 
 
 
 
@@ -13,7 +13,7 @@ This project is a toy project of web crawler specifically targeted on douban gro
 
 2.  Crawl **a step deeper**: reveal social networking graph of author and followers.
 
-3.  Connect the crawler with a SQL database instead of current CSV file.
+---3.  Connect the crawler with a SQL database instead of current CSV file.---(done)
 
 4.  Provide a **CLI** to use this project.
 
