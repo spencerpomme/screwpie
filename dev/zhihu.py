@@ -62,10 +62,3 @@ print('done')
 file.close()
 
 
-
-
-
-
-
-    
-    
